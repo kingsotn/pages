@@ -1,7 +1,7 @@
 import React from "react";
 import { useCheckbox, Chip, VisuallyHidden } from "@nextui-org/react";
 import { tv } from "tailwind-variants";
-import { CheckIcon } from './CheckIcon.jsx'
+// import { CheckIcon } from './CheckIcon.jsx'
 
 const checkbox = tv({
   slots: {
@@ -48,7 +48,6 @@ export const CustomCheckbox = (props) => {
           content: styles.content(),
         }}
         color="primary"
-        startContent={isSelected ? <CheckIcon className="ml-1" /> : null}
         variant="faded"
         {...getLabelProps()}
       >
