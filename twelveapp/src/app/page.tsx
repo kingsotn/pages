@@ -1,10 +1,12 @@
-import Image from "next/image";
+import { NextUIProvider } from "@nextui-org/react";
 import LeftComponent from "./left";
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <LeftComponent />
+    <main className="flex min-h-screen flex-col p-24">
+      <NextUIProvider>
+        <LeftComponent />
+      </NextUIProvider>
     </main>
   );
 }
