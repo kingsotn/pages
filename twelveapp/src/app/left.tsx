@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import VideoUpload from './VideoUpload';
 import { Input, CheckboxGroup, Chip } from "@nextui-org/react";
 import { CustomCheckbox } from "./CustomCheckbox.jsx";
+import { Textarea } from "@nextui-org/input";
+
 
 const videoTypes = [
     "Documentary",
@@ -34,10 +36,20 @@ const goals = [
     "Engagement"
 ];
 
-
 const LeftComponent = () => {
     const [groupSelected, setGroupSelected] = useState<string[]>([]);
     const [goalSelected, setGoalSelected] = useState<string[]>([]);
+    const [additionalInfo, setAdditionalInfo] = useState('');
+    const placeholder = "e.g. make sure to include the keywords [plants, nature, health]. Emphasize the importance of health";
+
+
+    const handleKeyDown = (e: React.KeyboardEvent<any>) => {
+        if (e.key === 'Tab') {
+            e.preventDefault();
+            setAdditionalInfo(placeholder);
+        }
+    };
+
 
     const handleFilesAccepted = (files: File[]) => {
         console.log('Files accepted:', files);
@@ -84,6 +96,19 @@ const LeftComponent = () => {
                     ))}
                 </CheckboxGroup>
 
+            </div>
+
+            <div className='pt-8'>
+
+                <Textarea
+                    label="Anything else? (press tab to autocomplete)"
+                    placeholder="e.g. make sure to include the keywords [plants, nature, health]. Emphasize the importance of health"
+                    className="max-w-xs"
+                    size='lg'
+                    onChange={(e) => setAdditionalInfo(e.target.value)}
+                    value={additionalInfo}
+                    onKeyDown={handleKeyDown}
+                />
             </div>
 
 
