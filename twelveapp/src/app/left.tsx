@@ -5,7 +5,6 @@ import { Input, CheckboxGroup, Chip } from "@nextui-org/react";
 import { CustomCheckbox } from "./CustomCheckbox.jsx";
 import { Textarea } from "@nextui-org/input";
 
-
 const videoTypes = [
     "Documentary",
     "Animation",
@@ -13,23 +12,13 @@ const videoTypes = [
     "Tutorial",
     "Vlog",
     "Music Video",
-    "Review",
-    "Gaming",
-    "Interview",
-    "News",
     "Web Series",
-    "Live Stream",
-    "Unboxing",
-    "Reaction",
     "Travel",
     "Comedy"
 ];
 
 const goals = [
     "Education",
-    "Entertainment",
-    "Inspiration",
-    "Marketing",
     "Networking",
     "Promotion",
     "Training",
@@ -42,14 +31,12 @@ const LeftComponent = () => {
     const [additionalInfo, setAdditionalInfo] = useState('');
     const placeholder = "e.g. make sure to include the keywords [plants, nature, health]. Emphasize the importance of health";
 
-
     const handleKeyDown = (e: React.KeyboardEvent<any>) => {
         if (e.key === 'Tab') {
             e.preventDefault();
             setAdditionalInfo(placeholder);
         }
     };
-
 
     const handleFilesAccepted = (files: File[]) => {
         console.log('Files accepted:', files);
@@ -110,7 +97,6 @@ const LeftComponent = () => {
                     onKeyDown={handleKeyDown}
                 />
             </div>
-
 
         </div>
     );

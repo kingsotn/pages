@@ -1,18 +1,21 @@
 import React from "react";
 import { useCheckbox, Chip, VisuallyHidden } from "@nextui-org/react";
 import { tv } from "tailwind-variants";
-// import { CheckIcon } from './CheckIcon.jsx'
 
 const checkbox = tv({
   slots: {
-    base: "border-default hover:bg-default-200",
-    content: "text-default-500"
+    base: "border-2 cursor-pointer transition-colors",
+    content: "text-current transition-colors"
   },
   variants: {
     isSelected: {
       true: {
-        base: "border-primary bg-primary hover:bg-primary-500 hover:border-primary-500",
-        content: "text-primary-foreground pl-1"
+        base: "border-primary bg-primary transition-colors",
+        content: "text-primary-foreground transition-colors"
+      },
+      false: {
+        base: "border-default bg-transparent",
+        content: "text-default-500"
       }
     },
     isFocusVisible: {
@@ -20,6 +23,9 @@ const checkbox = tv({
         base: "outline-none ring-2 ring-focus ring-offset-2 ring-offset-background",
       }
     }
+  },
+  defaultVariants: {
+    isSelected: false
   }
 });
 
@@ -35,23 +41,20 @@ export const CustomCheckbox = (props) => {
     ...props
   });
 
-  const styles = checkbox({ isSelected, isFocusVisible });
+  const styles = React.useMemo(() => checkbox({ isSelected, isFocusVisible }), [isSelected, isFocusVisible]);
 
   return (
     <label {...getBaseProps()}>
       <VisuallyHidden>
         <input {...getInputProps()} />
       </VisuallyHidden>
-      <Chip
-        classNames={{
-          base: styles.base(),
-          content: styles.content(),
-        }}
-        color="primary"
-        variant="faded"
-        {...getLabelProps()}
+      <Chip classNames={{
+        base: styles.base(),
+        content: styles.content(),
+      }}
+        // variant="flat"
       >
-        {children ? children : isSelected ? "Enabled" : "Disabled"}
+        {children || (isSelected ? "Enabled" : "Disabled")}
       </Chip>
     </label>
   );
