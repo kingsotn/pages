@@ -6,23 +6,23 @@ import { CustomCheckbox } from "./CustomCheckbox.jsx";
 import { Textarea } from "@nextui-org/input";
 
 const videoTypes = [
-    "Documentary",
-    "Animation",
-    "Short Film",
-    "Tutorial",
-    "Vlog",
-    "Music Video",
-    "Web Series",
-    "Travel",
-    "Comedy"
+    "Informational",
+    "Entertainment",
+    "Educational",
+    "Promotional",
+    "Personal",
+    "Creative",
+    "Professional",
+    "Lifestyle",
+    "Narrative"
 ];
 
 const goals = [
-    "Education",
-    "Networking",
-    "Promotion",
-    "Training",
-    "Engagement"
+    "Inform",
+    "Connect",
+    "Promote",
+    "Develop",
+    "Engage"
 ];
 
 const LeftComponent = () => {
@@ -90,7 +90,9 @@ const LeftComponent = () => {
                 <Textarea
                     label="Anything else? (press tab to autocomplete)"
                     placeholder="e.g. make sure to include the keywords [plants, nature, health]. Emphasize the importance of health"
-                    className="max-w-xs"
+                    classNames={{
+                        input: "min-h-[200px] min-w-[300px] max-w-xl"
+                    }}
                     size='lg'
                     onChange={(e) => setAdditionalInfo(e.target.value)}
                     value={additionalInfo}
