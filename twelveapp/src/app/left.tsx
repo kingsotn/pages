@@ -29,7 +29,7 @@ const LeftComponent = () => {
     const [groupSelected, setGroupSelected] = useState<string[]>([]);
     const [goalSelected, setGoalSelected] = useState<string[]>([]);
     const [additionalInfo, setAdditionalInfo] = useState('');
-    const placeholder = "e.g. make sure to include the keywords [plants, nature, health]. Emphasize the importance of health";
+    const placeholder = "e.g. make sure to include the keywords plants, nature, health";
 
     const handleKeyDown = (e: React.KeyboardEvent<any>) => {
         if (e.key === 'Tab') {
@@ -89,7 +89,8 @@ const LeftComponent = () => {
 
                 <Textarea
                     label="Anything else? (press tab to autocomplete)"
-                    placeholder="e.g. make sure to include the keywords [plants, nature, health]. Emphasize the importance of health"
+                    placeholder="e.g. make sure to include the keywords plants, nature, health"
+                    labelPlacement="outside"
                     classNames={{
                         input: "min-h-[200px] min-w-[300px] max-w-xl"
                     }}

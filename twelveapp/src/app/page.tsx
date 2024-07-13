@@ -3,10 +3,14 @@ import LeftComponent from "./left";
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col p-24">
+    <main >
       <NextUIProvider>
-        <LeftComponent />
+        <div className="flex min-h-screen flex-col p-24 border-cyan-300 border-width-2 min-w-[600px]" style={{ maxWidth: '33.33vw' }}>
+          <LeftComponent />
+        </div>
+        <RightComponent />
       </NextUIProvider>
     </main>
+
   );
 }
