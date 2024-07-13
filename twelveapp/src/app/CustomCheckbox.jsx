@@ -52,7 +52,6 @@ export const CustomCheckbox = (props) => {
         base: styles.base(),
         content: styles.content(),
       }}
-      // variant="flat"
       >
         {children || (isSelected ? "Enabled" : "Disabled")}
       </Chip>

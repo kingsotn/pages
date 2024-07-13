@@ -25,7 +25,11 @@ const goals = [
     "Engage"
 ];
 
-const LeftComponent = () => {
+type LeftComponentProps = {
+    setFormSubmitted: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+const LeftComponent: React.FC<LeftComponentProps> = ({ setFormSubmitted }) => {
     const [groupSelected, setGroupSelected] = useState<string[]>([]);
     const [goalSelected, setGoalSelected] = useState<string[]>([]);
     const [additionalInfo, setAdditionalInfo] = useState('');
@@ -41,6 +45,11 @@ const LeftComponent = () => {
     const handleFilesAccepted = (files: File[]) => {
         console.log('Files accepted:', files);
         // Handle the files (e.g., upload to a server, preview, etc.)
+    };
+
+    const handleSubmit = () => {
+        console.log("generate button clicked")
+        setFormSubmitted(true);
     };
 
     return (
@@ -104,11 +113,8 @@ const LeftComponent = () => {
                 <Button
                     color="default"
                     className="rounded-md"
-                    endContent={
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="0 0 24 24" fill="none">
-                            <path d="M12 8.25L15.75 12M15.75 12L12 15.75M15.75 12H8.25M21.75 12C21.75 17.3848 17.3848 21.75 12 21.75C6.61522 21.75 2.25 17.3848 2.25 12C2.25 6.61522 6.61522 2.25 12 2.25C17.3848 2.25 21.75 6.61522 21.75 12Z" stroke="#3A52EE" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                        </svg>
-                    }
+                    endContent={<svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="0 0 24 24" fill="none"><path d="M12 8.25L15.75 12M15.75 12L12 15.75M15.75 12H8.25M21.75 12C21.75 17.3848 17.3848 21.75 12 21.75C6.61522 21.75 2.25 17.3848 2.25 12C2.25 6.61522 6.61522 2.25 12 2.25C17.3848 2.25 21.75 6.61522 21.75 12Z" stroke="#3A52EE" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>}
+                    onClick={handleSubmit}
                 >
                     Generate
                 </Button>
