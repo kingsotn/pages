@@ -4,23 +4,23 @@ import { tv } from "tailwind-variants";
 
 const checkbox = tv({
   slots: {
-    base: "border-2 cursor-pointer transition-colors",
-    content: "text-current transition-colors"
+    base: "border-2 cursor-pointer transition-colors rounded-md",
+    content: "text-current transition-colors rounded-md"
   },
   variants: {
     isSelected: {
       true: {
-        base: "border-primary bg-primary transition-colors",
-        content: "text-primary-foreground transition-colors"
+        base: "border-primary bg-primary transition-colors rounded-md",
+        content: "text-primary-foreground transition-colors rounded-md"
       },
       false: {
-        base: "border-default bg-transparent",
-        content: "text-default-500"
+        base: "border-default bg-transparent rounded-md",
+        content: "text-default-500 rounded-md"
       }
     },
     isFocusVisible: {
       true: {
-        base: "outline-none ring-2 ring-focus ring-offset-2 ring-offset-background",
+        base: "outline-none ring-2 ring-focus ring-offset-2 ring-offset-background rounded-md",
       }
     }
   },
@@ -52,7 +52,7 @@ export const CustomCheckbox = (props) => {
         base: styles.base(),
         content: styles.content(),
       }}
-        // variant="flat"
+      // variant="flat"
       >
         {children || (isSelected ? "Enabled" : "Disabled")}
       </Chip>
