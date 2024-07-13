@@ -1,7 +1,7 @@
 "use client"
 import React, { useState } from 'react';
 import VideoUpload from './VideoUpload';
-import { Input, CheckboxGroup, Chip } from "@nextui-org/react";
+import { Input, CheckboxGroup, Chip, Button } from "@nextui-org/react";
 import { CustomCheckbox } from "./CustomCheckbox.jsx";
 import { Textarea } from "@nextui-org/input";
 
@@ -86,7 +86,6 @@ const LeftComponent = () => {
             </div>
 
             <div className='pt-8'>
-
                 <Textarea
                     label="Anything else? (press tab to autocomplete)"
                     placeholder="e.g. make sure to include the keywords plants, nature, health"
@@ -101,7 +100,21 @@ const LeftComponent = () => {
                 />
             </div>
 
-        </div>
+            <div className="flex justify-end pt-3">
+                <Button
+                    color="default"
+                    className="rounded-md"
+                    endContent={
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="0 0 24 24" fill="none">
+                            <path d="M12 8.25L15.75 12M15.75 12L12 15.75M15.75 12H8.25M21.75 12C21.75 17.3848 17.3848 21.75 12 21.75C6.61522 21.75 2.25 17.3848 2.25 12C2.25 6.61522 6.61522 2.25 12 2.25C17.3848 2.25 21.75 6.61522 21.75 12Z" stroke="#3A52EE" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    }
+                >
+                    Generate
+                </Button>
+            </div>
+
+        </div >
     );
 };
 
