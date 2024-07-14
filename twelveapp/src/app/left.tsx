@@ -54,7 +54,7 @@ const LeftComponent: React.FC<LeftComponentProps> = ({ setFormSubmitted }) => {
 
     return (
 
-        <div>
+        <div className='bg-gray-50'>
             <h1 className="text-2xl font-bold mb-8">Generate Page</h1>
 
             <div className="mb-10">

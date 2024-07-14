@@ -46,7 +46,7 @@ const VideoUpload: React.FC<VideoUploadProps> = ({ onFilesAccepted }) => {
                             <path
                                 strokeLinecap="round"
                                 strokeLinejoin="round"
-                                strokeWidth="2"
+                                strokeWidth="1"
                                 d="M3 16v-1a4 4 0 014-4h10a4 4 0 014 4v1m-4 4H7a4 4 0 01-4-4v-1m5-4v6m2-6v6m2-6v6m2-6v6m2-6v6m2-6v6"
                             />
                         </svg>
