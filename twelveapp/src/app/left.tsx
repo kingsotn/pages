@@ -1,9 +1,11 @@
 "use client"
 import React, { useState } from 'react';
 import VideoUpload from './VideoUpload';
-import { Input, CheckboxGroup, Chip, Button } from "@nextui-org/react";
+import { Input, CheckboxGroup, Chip, Button, Spacer } from "@nextui-org/react";
 import { CustomCheckbox } from "./CustomCheckbox.jsx";
 import { Textarea } from "@nextui-org/input";
+import { TwelveLabs, Task } from 'twelvelabs-js';
+
 
 const videoTypes = [
     "Informational",
@@ -54,13 +56,11 @@ const LeftComponent: React.FC<LeftComponentProps> = ({ setFormSubmitted }) => {
 
     return (
 
-        <div className='bg-gray-50'>
+        <div className='bg-gray-50 px-24 pt-20'>
             <h1 className="text-2xl font-bold mb-8">Generate Page</h1>
 
             <div className="mb-10">
-                <div className="p-6">
-                    <VideoUpload onFilesAccepted={handleFilesAccepted} />
-                </div>
+                <VideoUpload onFilesAccepted={handleFilesAccepted} />
             </div>
 
             <div className="flex flex-col gap-1 w-full">
@@ -78,8 +78,11 @@ const LeftComponent: React.FC<LeftComponentProps> = ({ setFormSubmitted }) => {
                     ))}
                 </CheckboxGroup>
 
+
+                <Spacer y={8} />
+
                 <CheckboxGroup
-                    className="gap-1"
+                    className="gap-1 text-blue-300 "
                     label="Tell us more about your video"
                     orientation="horizontal"
                     value={groupSelected}

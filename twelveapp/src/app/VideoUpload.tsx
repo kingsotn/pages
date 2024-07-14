@@ -29,7 +29,7 @@ const VideoUpload: React.FC<VideoUploadProps> = ({ onFilesAccepted }) => {
             <h2 className="text-xl font-semibold mb-4">Upload Video</h2>
             <div
                 {...getRootProps()}
-                className="border-2 border-dotted border-gray-400 rounded-lg p-8 text-center cursor-pointer"
+                className="border-2 border-dashed border-gray-400 rounded-lg p-8 text-center cursor-pointer"
             >
                 <input {...getInputProps()} />
                 {isDragActive ? (
