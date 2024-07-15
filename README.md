@@ -1,6 +1,13 @@
 # What I will be building:
 A platform that takes video as an input and produces bite-sized blogs for [SEO](https://en.wikipedia.org/wiki/Search_engine_optimization) optimization.
 
+# Progress
+![](left-init.png)
+![](loading.png)
+![](progress.png)
+![](left-final.png)
+
+
 # Motivation
 The inspiration behind this idea comes from [perplexity pages](https://www.perplexity.ai/hub/blog/perplexity-pages). In the future, answer engines will need more information to index into, which requires companies to proactively push their marketing online. Just look at [jotbot](https://myjotbot.com/blog) and [this](). You don't need quality content, you just need more of it to feed into answer engines and they will index fine on perplexity or phind. Although Google have ways in preventing the [gamifcation](https://blog.hubspot.com/marketing/diagnose-fix-google-penalty), if you believe in answer engines, AI agents, then optimizing for keywords are future-proof solutions. Most startups pursuing traction will do this — and there's honestly no problem with it. 
 
