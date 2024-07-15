@@ -4,6 +4,7 @@ import { Input, CheckboxGroup, Chip, Button, Spacer } from "@nextui-org/react";
 import { CustomCheckbox } from "./CustomCheckbox.jsx";
 import { Textarea } from "@nextui-org/input";
 import { TwelveLabs, Task } from 'twelvelabs-js';
+import Clip from './clip';
 
 
 const videoTypes = [
@@ -41,17 +42,18 @@ type LeftComponentProps = {
     setFormSubmitted: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const LeftComponent: React.FC<LeftComponentProps> = ({ setFormSubmitted }) => {
+const LeftComponent: React.FC<LeftComponentProps> = ({ setFormSubmitted, formSubmitted }) => {
     const [groupSelected, setGroupSelected] = useState<string[]>([]);
     const [goalSelected, setGoalSelected] = useState<string[]>([]);
-    const [additionalInfo, setAdditionalInfo] = useState('');
-    const [videoUrl, setVideoUrl] = useState("https://www.youtube.com/watch?v=Nsx5RDVKZSk");
+    const [additionalInfo, setAdditionalInfo] = useState<string>('');
+    const [videoUrl, setVideoUrl] = useState<string>("");
+    const [formFilled, setFormFilled] = useState<boolean>(false);
 
     const handleKeyDown = (e: React.KeyboardEvent<any>, field: string) => {
         if (e.key !== 'Tab') return
         e.preventDefault();
 
-        if (field === "videoUrl") { console.log("hi"); setVideoUrl("https://www.youtube.com/watch?v=Nsx5RDVKZSk") }
+        if (field === "videoUrl") { setVideoUrl("https://www.youtube.com/watch?v=Nsx5RDVKZSk") }
         if (field === "additionalInfo") { setAdditionalInfo("e.g. make sure to include the keywords plants, nature, health"); }
     };
 
@@ -70,18 +72,20 @@ const LeftComponent: React.FC<LeftComponentProps> = ({ setFormSubmitted }) => {
     };
 
     return (
-        <div className='bg-gray-50 px-24 pt-20'>
+        <div className='bg-gray-50 px-24 pt-24'>
             <h1 className="text-2xl font-serif mb-8">Generate Page</h1>
-
-            <div className="mb-10 mt-30">
+            <div className="mb-10 pt-0.5">
                 <Input
+                    startContent={
+                        <Clip />
+                    }
                     isRequired
                     key={"outside"}
-                    label="Youtube Link"
                     labelPlacement={"outside"}
+                    label="Youtube Link"
                     placeholder="https://www.youtube.com/watch?v=Nsx5RDVKZSk"
                     variant="bordered"
-                    value={videoUrl}
+                    value={videoUrl ? videoUrl : ""}
                     pattern="^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/.+$"
                     isInvalid={!isValidYouTubeUrl(videoUrl)}
                     errorMessage="Please enter a valid YouTube URL"
@@ -108,7 +112,6 @@ const LeftComponent: React.FC<LeftComponentProps> = ({ setFormSubmitted }) => {
 
 
                 <Spacer y={8} />
-
                 <CheckboxGroup
                     className="gap-1 text-blue-300 "
                     label="Tell us more about your video"
@@ -146,6 +149,7 @@ const LeftComponent: React.FC<LeftComponentProps> = ({ setFormSubmitted }) => {
                     className="rounded-md"
                     endContent={<svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="0 0 24 24" fill="none"><path d="M12 8.25L15.75 12M15.75 12L12 15.75M15.75 12H8.25M21.75 12C21.75 17.3848 17.3848 21.75 12 21.75C6.61522 21.75 2.25 17.3848 2.25 12C2.25 6.61522 6.61522 2.25 12 2.25C17.3848 2.25 21.75 6.61522 21.75 12Z" stroke="#3A52EE" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>}
                     onClick={handleSubmit}
+                    isDisabled={formFilled ? false : true}
                 >
                     Generate
                 </Button>

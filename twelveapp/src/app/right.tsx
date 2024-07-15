@@ -11,7 +11,7 @@ const RightComponent: React.FC<RightComponentProps> = ({ formSubmitted }) => {
     const [isLoading, setIsLoading] = useState(true);
 
     return (
-        <div className="flex flex-col pt-24 px-40 h-full p-4 bg-white">
+        <div className="flex flex-col pt-24 px-20 h-full p-4 bg-white">
             {/* Banner */}
             <div className="w-full h-[400px] relative overflow-hidden transition-transform duration-300 hover:scale-[101%] shadow-lg rounded-xl">
                 {isLoading && (
