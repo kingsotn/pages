@@ -5,6 +5,7 @@ import { CustomCheckbox } from "./CustomCheckbox.jsx";
 import { Textarea } from "@nextui-org/input";
 import { TwelveLabs, Task } from 'twelvelabs-js';
 import Clip from './clip';
+import { TabPressed, TabUnpressed } from './tabs';
 
 
 const videoTypes = [
@@ -48,6 +49,7 @@ const LeftComponent: React.FC<LeftComponentProps> = ({ setFormSubmitted, formSub
     const [additionalInfo, setAdditionalInfo] = useState<string>('');
     const [videoUrl, setVideoUrl] = useState<string>("");
     const [formFilled, setFormFilled] = useState<boolean>(false);
+    const [isTabPressed, setIsTabPressed] = useState<boolean>(false)
 
     const handleKeyDown = (e: React.KeyboardEvent<any>, field: string) => {
         if (e.key !== 'Tab') return
@@ -55,6 +57,13 @@ const LeftComponent: React.FC<LeftComponentProps> = ({ setFormSubmitted, formSub
 
         if (field === "videoUrl") { setVideoUrl("https://www.youtube.com/watch?v=Nsx5RDVKZSk") }
         if (field === "additionalInfo") { setAdditionalInfo("e.g. make sure to include the keywords plants, nature, health"); }
+
+        setIsTabPressed(true);
+    };
+
+    const handleKeyUp = (e: React.KeyboardEvent<any>) => {
+        if (e.key !== 'Tab') return;
+        setIsTabPressed(false);
     };
 
     const handleFilesAccepted = (files: File[]) => {
@@ -138,7 +147,18 @@ const LeftComponent: React.FC<LeftComponentProps> = ({ setFormSubmitted, formSub
             <Spacer y={6} />
             <div>
                 <Textarea
-                    label="Anything else? (press tab to autocomplete)"
+                    label={
+                        <div className="flex items-end space-x-1">
+                            <span>Anything else?</span>
+                            {isTabPressed ? (
+                                <div className="align-bottom"><TabPressed /></div>
+                            ) : (
+                                <div className="align-bottom"><TabUnpressed /></div>
+                            )}
+                        </div>
+
+
+                    }
                     placeholder="e.g. make sure to include the keywords plants, nature, health"
                     variant="bordered"
                     radius='sm'
@@ -150,6 +170,7 @@ const LeftComponent: React.FC<LeftComponentProps> = ({ setFormSubmitted, formSub
                     onChange={(e) => setAdditionalInfo(e.target.value)}
                     value={additionalInfo}
                     onKeyDown={(e) => handleKeyDown(e, "additionalInfo")}
+                    onKeyUp={handleKeyUp}
                 />
             </div>
 
