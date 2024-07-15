@@ -11,7 +11,7 @@ export default function Home() {
     <NextUIProvider>
       <main className="min-h-screen flex">
         <div className="w-1/3 min-w-[700px] max-w-[700px] flex-shrink-0 flex flex-col border-r-2 bg-gray-50">
-          <LeftComponent setFormSubmitted={setFormSubmitted} formSubmitted={formSubmitted} />
+          <LeftComponent setFormSubmitted={setFormSubmitted} />
         </div>
         <div className="w-2/3  min-w-[600px] flex-grow flex flex-col">
           <RightComponent formSubmitted={formSubmitted} />

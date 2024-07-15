@@ -4,14 +4,14 @@ import { tv } from "tailwind-variants";
 
 const checkbox = tv({
   slots: {
-    base: "border-1 cursor-pointer transition-colors rounded-md",
-    content: "text-current transition-colors rounded-md"
+    base: "border-1 cursor-pointer transition-colors rounded-md hover:scale-[104%]",
+    content: "text-current transition-colors rounded-md font-[450]"
   },
   variants: {
     isSelected: {
       true: {
         base: "border-primary bg-primary transition-colors rounded-md",
-        content: "text-primary-foreground transition-colors rounded-md"
+        content: "text-gray-600 transition-colors rounded-md"
       },
       false: {
         base: "border-default bg-transparent rounded-md",

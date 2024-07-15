@@ -18,6 +18,7 @@ const config: Config = {
       },
       colors: {
         'osm-black': '#11181C',
+        'primary': '#9ced6f'
       },
       fontFamily: {
         'osm-font': '14px__Inter_aaf875',
