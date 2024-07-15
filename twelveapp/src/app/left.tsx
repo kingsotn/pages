@@ -1,6 +1,5 @@
 "use client"
 import React, { useState } from 'react';
-import VideoUpload from './VideoUpload';
 import { Input, CheckboxGroup, Chip, Button, Spacer } from "@nextui-org/react";
 import { CustomCheckbox } from "./CustomCheckbox.jsx";
 import { Textarea } from "@nextui-org/input";
@@ -27,6 +26,17 @@ const goals = [
     "Engage"
 ];
 
+export async function getServerSideProps() {
+    const myKey = process.env.TWELVE_KEY as string;
+    const client = new TwelveLabs({ apiKey: myKey });
+
+    return {
+        props: {
+            // Return any data you want to pass to the component
+        }
+    };
+}
+
 type LeftComponentProps = {
     setFormSubmitted: React.Dispatch<React.SetStateAction<boolean>>;
 };
@@ -35,18 +45,18 @@ const LeftComponent: React.FC<LeftComponentProps> = ({ setFormSubmitted }) => {
     const [groupSelected, setGroupSelected] = useState<string[]>([]);
     const [goalSelected, setGoalSelected] = useState<string[]>([]);
     const [additionalInfo, setAdditionalInfo] = useState('');
-    const placeholder = "e.g. make sure to include the keywords plants, nature, health";
+    const [videoUrl, setVideoUrl] = useState("https://www.youtube.com/watch?v=Nsx5RDVKZSk");
 
-    const handleKeyDown = (e: React.KeyboardEvent<any>) => {
-        if (e.key === 'Tab') {
-            e.preventDefault();
-            setAdditionalInfo(placeholder);
-        }
+    const handleKeyDown = (e: React.KeyboardEvent<any>, field: string) => {
+        if (e.key !== 'Tab') return
+        e.preventDefault();
+
+        if (field === "videoUrl") { console.log("hi"); setVideoUrl("https://www.youtube.com/watch?v=Nsx5RDVKZSk") }
+        if (field === "additionalInfo") { setAdditionalInfo("e.g. make sure to include the keywords plants, nature, health"); }
     };
 
     const handleFilesAccepted = (files: File[]) => {
         console.log('Files accepted:', files);
-        // Handle the files (e.g., upload to a server, preview, etc.)
     };
 
     const handleSubmit = () => {
@@ -54,13 +64,31 @@ const LeftComponent: React.FC<LeftComponentProps> = ({ setFormSubmitted }) => {
         setFormSubmitted(true);
     };
 
+    const isValidYouTubeUrl = (url: string) => {
+        const youtubeRegex = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/.+$/;
+        return youtubeRegex.test(url);
+    };
+
     return (
-
         <div className='bg-gray-50 px-24 pt-20'>
-            <h1 className="text-2xl font-bold mb-8">Generate Page</h1>
+            <h1 className="text-2xl font-serif mb-8">Generate Page</h1>
 
-            <div className="mb-10">
-                <VideoUpload onFilesAccepted={handleFilesAccepted} />
+            <div className="mb-10 mt-30">
+                <Input
+                    isRequired
+                    key={"outside"}
+                    label="Youtube Link"
+                    labelPlacement={"outside"}
+                    placeholder="https://www.youtube.com/watch?v=Nsx5RDVKZSk"
+                    variant="bordered"
+                    value={videoUrl}
+                    pattern="^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/.+$"
+                    isInvalid={!isValidYouTubeUrl(videoUrl)}
+                    errorMessage="Please enter a valid YouTube URL"
+                    className="max-w-full rounded-sm"
+                    onChange={(e) => setVideoUrl(e.target.value)}
+                    onKeyDown={(e) => handleKeyDown(e, "videoUrl")}
+                />
             </div>
 
             <div className="flex flex-col gap-1 w-full">
@@ -108,7 +136,7 @@ const LeftComponent: React.FC<LeftComponentProps> = ({ setFormSubmitted }) => {
                     size='lg'
                     onChange={(e) => setAdditionalInfo(e.target.value)}
                     value={additionalInfo}
-                    onKeyDown={handleKeyDown}
+                    onKeyDown={(e) => handleKeyDown(e, "additionalInfo")}
                 />
             </div>
 

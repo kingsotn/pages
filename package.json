@@ -1,5 +1,7 @@
 {
   "dependencies": {
-    "@nextui-org/react": "^2.4.2"
+    "@nextui-org/react": "^2.4.2",
+    "dotenv": "^16.4.5",
+    "twelvelabs-js": "^0.2.3"
   }
 }
