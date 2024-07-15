@@ -10,10 +10,10 @@ export default function Home() {
   return (
     <NextUIProvider>
       <main className="min-h-screen flex">
-        <div className="w-1/3 min-w-[700px] max-w-[700px] flex-shrink-0 flex flex-col border-r-2 bg-gray-50">
+        <div className="w-1/3 min-w-[700px] max-w-[700px] flex-shrink-0 flex flex-col border-r-1 border-gray-300 bg-gray-50 fixed left-0 top-0 bottom-0">
           <LeftComponent setFormSubmitted={setFormSubmitted} />
         </div>
-        <div className="w-2/3  min-w-[600px] flex-grow flex flex-col">
+        <div className="w-2/3 min-w-[600px] flex-grow flex flex-col ml-[700px] overflow-auto">
           <RightComponent formSubmitted={formSubmitted} />
         </div>
       </main>

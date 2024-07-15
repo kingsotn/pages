@@ -207,7 +207,7 @@ const LeftComponent: React.FC<LeftComponentProps> = ({ setFormSubmitted }) => {
                 <Button
                     color='primary'
                     variant='shadow'
-                    className="rounded-md hover:scale-105 text-gray-600 font-medium"
+                    className="rounded-md hover:scale-105 text-gray-600 font-[2px]"
                     endContent={
                         <svg xmlns="http://www.w3.org/2000/svg" width="18px" height="18px" viewBox="0 0 24 24" fill="none">
                             <path d="M12 8.25L15.75 12M15.75 12L12 15.75M15.75 12H8.25M21.75 12C21.75 17.3848 17.3848 21.75 12 21.75C6.61522 21.75 2.25 17.3848 2.25 12C2.25 6.61522 6.61522 2.25 12 2.25C17.3848 2.25 21.75 6.61522 21.75 12Z" stroke="#4b5563" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
