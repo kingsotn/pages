@@ -74,12 +74,11 @@ const LeftComponent: React.FC<LeftComponentProps> = ({ setFormSubmitted, formSub
     return (
         <div className='bg-gray-50 px-24 pt-24'>
             <h1 className="text-2xl font-serif mb-8">Generate Page</h1>
-            <div className="mb-10 pt-0.5">
+            <div className="pt-0.5">
                 <Input
-                    startContent={
-                        <Clip />
-                    }
+                    startContent={<Clip />}
                     isRequired
+                    radius='sm'
                     key={"outside"}
                     labelPlacement={"outside"}
                     label="Youtube Link"
@@ -94,14 +93,19 @@ const LeftComponent: React.FC<LeftComponentProps> = ({ setFormSubmitted, formSub
                     onKeyDown={(e) => handleKeyDown(e, "videoUrl")}
                 />
             </div>
+            <Spacer y={6} />
+
 
             <div className="flex flex-col gap-1 w-full">
                 <CheckboxGroup
                     className="gap-1"
-                    label="What is your goal"
+                    label="What are your goals?"
                     orientation="horizontal"
                     value={goalSelected}
                     onChange={setGoalSelected}
+                    classNames={{
+                        label: 'text-black font-osm-font font-sans text-[14px]' // Add your custom class for the label here
+                    }}
                 >
                     {goals.map((goal) => (
                         <CustomCheckbox key={goal} value={goal.toLowerCase().replace(/\s/g, '')}>
@@ -111,13 +115,16 @@ const LeftComponent: React.FC<LeftComponentProps> = ({ setFormSubmitted, formSub
                 </CheckboxGroup>
 
 
-                <Spacer y={8} />
+                <Spacer y={6} />
                 <CheckboxGroup
-                    className="gap-1 text-blue-300 "
-                    label="Tell us more about your video"
+                    className="gap-1 text-osm-black "
+                    label="Tell us more about your video →"
                     orientation="horizontal"
                     value={groupSelected}
                     onChange={setGroupSelected}
+                    classNames={{
+                        label: 'text-black font-osm-font font-sans text-[14px]' // Add your custom class for the label here
+                    }}
                 >
                     {videoTypes.map((type) => (
                         <CustomCheckbox key={type} value={type.toLowerCase().replace(/\s/g, '')}>
@@ -128,22 +135,26 @@ const LeftComponent: React.FC<LeftComponentProps> = ({ setFormSubmitted, formSub
 
             </div>
 
-            <div className='pt-8'>
+            <Spacer y={6} />
+            <div>
                 <Textarea
                     label="Anything else? (press tab to autocomplete)"
                     placeholder="e.g. make sure to include the keywords plants, nature, health"
+                    variant="bordered"
+                    radius='sm'
                     labelPlacement="outside"
                     classNames={{
                         input: "min-h-[200px] min-w-[300px] max-w-xl"
                     }}
-                    size='lg'
+                    size='md'
                     onChange={(e) => setAdditionalInfo(e.target.value)}
                     value={additionalInfo}
                     onKeyDown={(e) => handleKeyDown(e, "additionalInfo")}
                 />
             </div>
 
-            <div className="flex justify-end pt-3">
+            <Spacer y={6} />
+            <div className="flex justify-end">
                 <Button
                     color="default"
                     className="rounded-md"
@@ -154,6 +165,7 @@ const LeftComponent: React.FC<LeftComponentProps> = ({ setFormSubmitted, formSub
                     Generate
                 </Button>
             </div>
+
 
         </div >
     );

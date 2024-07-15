@@ -4,7 +4,7 @@ import { tv } from "tailwind-variants";
 
 const checkbox = tv({
   slots: {
-    base: "border-2 cursor-pointer transition-colors rounded-md",
+    base: "border-1 cursor-pointer transition-colors rounded-md",
     content: "text-current transition-colors rounded-md"
   },
   variants: {
@@ -15,7 +15,7 @@ const checkbox = tv({
       },
       false: {
         base: "border-default bg-transparent rounded-md",
-        content: "text-default-500 rounded-md"
+        content: "text-default-600 rounded-md"
       }
     },
     isFocusVisible: {
