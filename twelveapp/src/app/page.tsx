@@ -9,14 +9,15 @@ export default function Home() {
 
   return (
     <NextUIProvider>
-      <main className="min-h-screen flex">
-        <div className="w-1/3 min-w-[700px] max-w-[700px] flex-shrink-0 flex flex-col border-r-1 border-gray-300 bg-gray-50 fixed left-0 top-0 bottom-0">
+      <main className="min-h-screen flex flex-col md:flex-row">
+        <div className="w-full md:w-[760px] min-w-[760px] flex-shrink-0 flex flex-col border-b-1 md:border-b-0 md:border-r-1 border-gray-300 bg-gray-50 md:fixed md:left-0 md:top-0 md:bottom-0">
           <LeftComponent setFormSubmitted={setFormSubmitted} />
         </div>
-        <div className="w-2/3 min-w-[600px] flex-grow flex flex-col ml-[700px] overflow-auto">
+        <div className="w-full md:w-[calc(100%-760px)] min-w-[760px] flex-grow flex flex-col md:ml-[760px] overflow-y-auto">
           <RightComponent formSubmitted={formSubmitted} />
         </div>
       </main>
     </NextUIProvider>
+
   );
 }

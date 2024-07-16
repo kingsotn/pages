@@ -1,11 +1,12 @@
 "use client"
 import React, { useState, useEffect } from 'react';
-import { Input, CheckboxGroup, Chip, Button, Spacer } from "@nextui-org/react";
+import { Input, CheckboxGroup, Button, Spacer } from "@nextui-org/react";
 import { CustomCheckbox } from "./CustomCheckbox.jsx";
 import { Textarea } from "@nextui-org/input";
 import { TwelveLabs, Task } from 'twelvelabs-js';
 import Clip from './clip';
 import { TabPressed, TabUnpressed } from './tabs';
+import { summarizeYouTubeVideo } from './summarizeYouTubeVideo';
 
 
 const videoTypes = [
@@ -37,8 +38,6 @@ const logo = <svg width="15" height="15" viewBox="0 0 131 131" fill="none" xmlns
 </svg>
 
 export async function getServerSideProps() {
-    const myKey = process.env.TWELVE_KEY as string;
-    const client = new TwelveLabs({ apiKey: myKey });
 
     return {
         props: {
@@ -46,6 +45,8 @@ export async function getServerSideProps() {
         }
     };
 }
+
+const yc_video: string = "https://www.youtube.com/watch?v=Nsx5RDVKZSk"
 
 type LeftComponentProps = {
     setFormSubmitted: React.Dispatch<React.SetStateAction<boolean>>;
@@ -60,7 +61,7 @@ const LeftComponent: React.FC<LeftComponentProps> = ({ setFormSubmitted }) => {
     const [isTabPressed, setIsTabPressed] = useState<boolean>(false)
 
     useEffect(() => {
-        const isFormFilled = videoUrl !== '' && goalSelected.length > 0 && groupSelected.length > 0;
+        const isFormFilled = videoUrl !== '' && goalSelected.length > 0 && groupSelected.length > 0 && videoUrl === yc_video;
         setFormFilled(isFormFilled);
     }, [videoUrl, goalSelected, groupSelected]);
 
@@ -68,22 +69,17 @@ const LeftComponent: React.FC<LeftComponentProps> = ({ setFormSubmitted }) => {
         if (e.key !== 'Tab') return
         e.preventDefault();
 
-        if (field === "videoUrl") { setVideoUrl("https://www.youtube.com/watch?v=Nsx5RDVKZSk") }
+        if (field === "videoUrl") { setVideoUrl(yc_video) }
         if (field === "additionalInfo") { setIsTabPressed(true); setAdditionalInfo("e.g. make sure to include the keywords plants, nature, health"); }
     };
+
+    const handleToolTip = () => {
+        return videoUrl === yc_video;
+    }
 
     const handleKeyUp = (e: React.KeyboardEvent<any>) => {
         if (e.key !== 'Tab') return;
         setIsTabPressed(false);
-    };
-
-    const handleFilesAccepted = (files: File[]) => {
-        console.log('Files accepted:', files);
-    };
-
-    const handleSubmit = () => {
-        console.log("generate button clicked")
-        setFormSubmitted(true);
     };
 
     const isValidYouTubeUrl = (url: string) => {
@@ -91,9 +87,15 @@ const LeftComponent: React.FC<LeftComponentProps> = ({ setFormSubmitted }) => {
         return youtubeRegex.test(url);
     };
 
+    const handleSummarizeClick = async () => {
+        setFormSubmitted(true)
+        // const summary = await summarizeYouTubeVideo(videoUrl);
+        // console.log(summary); //4 Do something with the summary
+    };
+
     return (
-        <div className='bg-gray-50 px-24 pt-24'>
-            <h1 className="text-2xl font-serif ">Generate Page</h1>
+        <div className='bg-gray-50 px-24 pt-24 min-w-[330px]'>
+            <h1 className="text-2xl font-serif ">Generate SEO Page</h1>
             <Spacer y={1} />
             <p className="font-osm-font text-xs leading-normal text-gray-700">
                 This app allows you to automatically generate SEO-optimized content via Youtube video upload and the
@@ -114,8 +116,8 @@ const LeftComponent: React.FC<LeftComponentProps> = ({ setFormSubmitted }) => {
                     radius='sm'
                     key={"outside"}
                     labelPlacement={"outside"}
-                    label="Youtube Link"
-                    placeholder="https://www.youtube.com/watch?v=Nsx5RDVKZSk"
+                    label={"Youtube Link"}
+                    placeholder={yc_video}
                     variant="bordered"
                     value={videoUrl ? videoUrl : ""}
                     pattern="^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/.+$"
@@ -124,11 +126,18 @@ const LeftComponent: React.FC<LeftComponentProps> = ({ setFormSubmitted }) => {
                     onChange={(e) => setVideoUrl(e.target.value)}
                     onKeyDown={(e) => handleKeyDown(e, "videoUrl")}
                 />
-                <div className="min-h-[24px]">
-                    {!isValidYouTubeUrl(videoUrl) && (
+                <div className="min-h-[25px] leading-tight">
+                    {!isValidYouTubeUrl(videoUrl) ? (
                         <span className="text-red-500 text-xs ml-1 mt-0">Please enter a valid YouTube URL</span>
+                    ) : (
+                        videoUrl !== 'https://www.youtube.com/watch?v=Nsx5RDVKZSk' && (
+                            <span className="text-yellow-500 ml-1 text-xs leading-tight">
+                                Indexing new videos takes a looong time. We recommend you use my <a href="#" onClick={() => setVideoUrl('https://www.youtube.com/watch?v=Nsx5RDVKZSk')} className="text-blue-500 underline">pre-indexed</a> video
+                            </span>
+                        )
                     )}
                 </div>
+
             </div>
             <Spacer y={4} />
 
@@ -203,22 +212,25 @@ const LeftComponent: React.FC<LeftComponentProps> = ({ setFormSubmitted }) => {
             </div>
 
             <Spacer y={6} />
-            <div className="flex justify-end">
-                <Button
-                    color='primary'
-                    variant='shadow'
-                    className="rounded-md hover:scale-105 text-gray-600 font-[2px]"
-                    endContent={
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18px" height="18px" viewBox="0 0 24 24" fill="none">
-                            <path d="M12 8.25L15.75 12M15.75 12L12 15.75M15.75 12H8.25M21.75 12C21.75 17.3848 17.3848 21.75 12 21.75C6.61522 21.75 2.25 17.3848 2.25 12C2.25 6.61522 6.61522 2.25 12 2.25C17.3848 2.25 21.75 6.61522 21.75 12Z" stroke="#4b5563" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
-                    }
-                    onClick={handleSubmit}
-                    isDisabled={!formFilled}
-                >
-                    Generate
-                </Button>
+            <div className='flex justify-end'>
+                <div className="flex justify-end mb-10">
+                    <Button
+                        color='primary'
+                        variant='shadow'
+                        className="rounded-md hover:scale-105 text-gray-600 font-medium"
+                        endContent={
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18px" height="18px" viewBox="0 0 24 24" fill="none">
+                                <path d="M12 8.25L15.75 12M15.75 12L12 15.75M15.75 12H8.25M21.75 12C21.75 17.3848 17.3848 21.75 12 21.75C6.61522 21.75 2.25 17.3848 2.25 12C2.25 6.61522 6.61522 2.25 12 2.25C17.3848 2.25 21.75 6.61522 21.75 12Z" stroke="#4b5563" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                        }
+                        onClick={handleSummarizeClick}
+                        isDisabled={!formFilled}
+                    >
+                        Generate
+                    </Button>
+                </div>
             </div>
+
 
 
         </div >
