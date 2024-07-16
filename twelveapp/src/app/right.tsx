@@ -1,15 +1,18 @@
 "use client"
 import React, { useState } from 'react';
-import { Image, Avatar, Spacer } from "@nextui-org/react";
+import { Image, Spacer } from "@nextui-org/react";
+import { Avatar } from '@nextui-org/avatar';
 import { Skeleton } from "@nextui-org/skeleton";
+import { Gist, Summary } from './page';
 
 type RightComponentProps = {
     formSubmitted: boolean;
+    gist: Gist
+    summary: Summary
 };
 
-const RightComponent: React.FC<RightComponentProps> = ({ formSubmitted }) => {
+const RightComponent: React.FC<RightComponentProps> = ({ formSubmitted, gist, summary }) => {
     const [isLoading, setIsLoading] = useState(true);
-    const mockText = "This is a mock of the Right Component. It will take up 2/3 of the width of the parent container.";
 
     return (
         <div className="flex flex-col pt-24 px-20 h-full p-4 bg-white">
@@ -20,7 +23,8 @@ const RightComponent: React.FC<RightComponentProps> = ({ formSubmitted }) => {
                 )}
                 {formSubmitted && (
                     <Image
-                        src="https://app.requestly.io/delay/0/https://images.wallpaperscraft.com/image/single/city_aerial_view_road_156925_2560x1024.jpg"
+                        // src="https://app.requestly.io/delay/0/https://images.wallpaperscraft.com/image/single/city_aerial_view_road_156925_2560x1024.jpg"
+                        src="https://imgcdn.stablediffusionweb.com/2024/7/16/f7245865-804f-409c-99d3-6a3a5e672a50.jpg"
                         alt="Banner Image"
                         classNames={{
                             wrapper: "w-full min-w-full min-h-[400px] max-h-[400px]",
@@ -40,19 +44,22 @@ const RightComponent: React.FC<RightComponentProps> = ({ formSubmitted }) => {
             <div>
                 {formSubmitted ? (
                     <>
-                        <h2 className="h-10 font-serif text-5xl font-medium w-1/2 text-osm-black min-w-[390px] text-nowrap">
-                            Title Component
-                        </h2>
+                        <Skeleton className="h-12 rounded w-1/2 min-w-[390px]" isLoaded={gist.title.length > 0} disableAnimation>
+                            <h2 className="h-10 font-serif text-4xl font-medium w-3/4 text-osm-black min-w-[390px] text-nowrap">
+                                {gist.title.split(":")[1]}
+                            </h2>
+
+                        </Skeleton>
                     </>
                 ) : (
                     <>
-                        <Skeleton className="h-16 rounded w-1/2 min-w-[390px]" />
+                        <Skeleton className="h-12 rounded w-1/2 min-w-[390px]" />
                     </>
                 )}
             </div>
 
             {/* Headers */}
-            <Spacer y={8} />
+            <Spacer y={6} />
             <div className="flex items-center text-nowrap">
                 {formSubmitted ? (
                     <>
@@ -76,16 +83,15 @@ const RightComponent: React.FC<RightComponentProps> = ({ formSubmitted }) => {
             {/* Content */}
             <Spacer y={8} />
             {formSubmitted ? (
-                <div className="flex flex-col space-y-4 text-osm-black">
-                    {Array.from({ length: 10 }).map((_, index) => (
-                        <div key={index} className="min-w-1/6 max-w-3/4 w-2/3 min-w-[430px]">
-                            {mockText}
-                            {mockText}
-                            {mockText}
-                            {mockText}
-                        </div>
-                    ))}
-                </div>
+                <Skeleton className="h-32 rounded w-2/3 min-w-[500.66px]" isLoaded={summary.summary.length > 0}>
+                    <div className="text-osm-black w-full space-y-8">
+                        {Array.from({ length: 3 }).map((_, index) => (
+                            <div key={index} className="w-full min-w-[500.66px]">
+                                {summary.summary}
+                            </div>
+                        ))}
+                    </div>
+                </Skeleton>
             ) : (
                 <div className="flex flex-col space-y-4">
                     <Skeleton className="h-32 rounded w-2/3 min-w-[430px]" />
