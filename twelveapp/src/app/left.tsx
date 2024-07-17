@@ -6,8 +6,10 @@ import { Textarea } from "@nextui-org/input";
 import { TwelveLabs, Task } from 'twelvelabs-js';
 import Clip from './clip';
 import { TabPressed, TabUnpressed } from './tabs';
-import { fetchGist, fetchSummary } from './summarizeVideo';
+import { fetchGist, fetchSeoAndTableOfContents, fetchSummary } from './summarizeVideo';
 import { Gist, Summary } from './page.jsx';
+import { SeoAndTableOfContents } from './summarizeVideo';
+import { setSourceMapsEnabled } from 'process';
 
 const videoTypes = [
     "Informational",
@@ -52,9 +54,10 @@ type LeftComponentProps = {
     setFormSubmitted: React.Dispatch<React.SetStateAction<boolean>>;
     setGist: React.Dispatch<React.SetStateAction<Gist>>
     setSummary: React.Dispatch<React.SetStateAction<Summary>>
+    setSeoAndTableOfContents: React.Dispatch<React.SetStateAction<SeoAndTableOfContents>> 
 };
 
-const LeftComponent: React.FC<LeftComponentProps> = ({ setFormSubmitted, setGist, setSummary }) => {
+const LeftComponent: React.FC<LeftComponentProps> = ({ setFormSubmitted, setGist, setSummary, setSeoAndTableOfContents }) => {
     const [groupSelected, setGroupSelected] = useState<string[]>([]);
     const [goalSelected, setGoalSelected] = useState<string[]>([]);
     const [additionalInfo, setAdditionalInfo] = useState<string>('');
@@ -90,6 +93,7 @@ const LeftComponent: React.FC<LeftComponentProps> = ({ setFormSubmitted, setGist
         try {
             setGist(await fetchGist(videoUrl));
             setSummary(await fetchSummary(videoUrl));
+            setSeoAndTableOfContents(await fetchSeoAndTableOfContents)
             console.log(await fetchSummary(videoUrl));
         } catch (error) {
             console.error('error fetching data:', error);

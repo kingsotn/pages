@@ -1,5 +1,4 @@
 const API_KEY = process.env.NEXT_PUBLIC_TWELVE_KEY; // from .env.local
-console.log("API_KEY", API_KEY)
 const BASE_URL = 'https://api.twelvelabs.io/v1.2';
 const TYPES = ['topic', 'hashtag', 'title']; // default types
 const VIDEO_ID = "66959fe83ca9a432304de1c8"
@@ -44,11 +43,11 @@ const fetchGist = async (videoUrl: string) => {
   }
 };
 
+let summary_response;
 // function to fetch summary
 const fetchSummary = async (
   videoUrl: string,
   temperature: number = 0.7,
-  prompt: string = 'Generate SEO content',
   type: string = 'summary'
 ) => {
 
@@ -65,13 +64,60 @@ const fetchSummary = async (
       'x-api-key': API_KEY as string, // explicitly cast to string
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({ temperature, prompt, video_id: videoId, type })
+    body: JSON.stringify({ temperature, video_id: videoId, type })
   };
 
   try {
     const res = await fetch(url, options);
     if (!res.ok) {
       throw new Error(`HTTP error! status: ${res.status}`);
+    }
+    summary_response = await res.json();
+    return summary_response;
+  } catch (err) {
+    console.error('error:', err);
+    throw err;
+  }
+};
+
+
+
+// function to fetch SEO and Table of Contents
+const prompt_string = `
+Based on this video, I want to generate five keywords for Search Engine Optimization, and a table of contents.
+An example output would be:
+{
+"seo": ["eBike", "Bike", "Bicycle", "Commuters", "Trees"],
+"tableOfContents" : ["Introduction", "Getting Started", "Basic Concepts", "Advanced Techniques", "Practical Applications"],
+}
+`;
+
+// this is a groq request
+const fetchSeoAndTableOfContents = async (
+  videoUrl: string,
+  temperature: number = 0.7,
+) => {
+
+  // use demo video (VIDEO_ID) or not
+  const videoId: string = (videoUrl === "https://www.youtube.com/watch?v=Nsx5RDVKZSk")
+    ? VIDEO_ID
+    : await fetchIndex();
+
+  const url = `${BASE_URL}/summarize`;
+  const options = {
+    method: 'POST',
+    headers: {
+      accept: 'application/json',
+      'x-api-key': API_KEY as string, // explicitly cast to string
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ temperature, video_id: videoId, prompt_string })
+  };
+
+  try {
+    const res = await fetch(url, options);
+    if (!res.ok) {
+      throw new Error(HTTP error! status: ${ res.status });
     }
     return await res.json();
   } catch (err) {
@@ -80,8 +126,61 @@ const fetchSummary = async (
   }
 };
 
-export { fetchGist, fetchSummary };
 
+export { fetchGist, fetchSummary, fetchSeoAndTableOfContents };
+
+
+
+
+
+
+// const SeoAndTableOfContentsSchema = z.object({
+//   seo: z.array(z.string()).nonempty(),
+//   tableOfContents: z.array(z.string()).nonempty(),
+// });
+
+// export type SeoAndTableOfContents = z.infer<typeof SeoAndTableOfContentsSchema>;
+
+// const fetchSeoAndTableOfContents = async (
+//   videoUrl: string,
+//   temperature: number = 0.2, // Lowered temperature for more deterministic output
+// ): Promise<SeoAndTableOfContents> => {
+//   const videoId: string = (videoUrl === "https://www.youtube.com/watch?v=Nsx5RDVKZSk")
+//     ? VIDEO_ID
+//     : await fetchIndex();
+
+//   const url = `${BASE_URL}/seo_and_toc`;
+//   const options = {
+//     method: 'POST',
+//     headers: {
+//       accept: 'application/json',
+//       'x-api-key': API_KEY as string,
+//       'Content-Type': 'application/json'
+//     },
+//     body: JSON.stringify({ temperature, video_id: videoId, prompt_string })
+//   };
+
+//   try {
+//     const res = await fetch(url, options);
+//     if (!res.ok) {
+//       throw new Error(`HTTP error! status: ${res.status}`);
+//     }
+//     const data = await res.json();
+
+//     // Parse and validate the data
+//     const validatedData = SeoAndTableOfContentsSchema.parse(data);
+
+//     return validatedData;
+//   } catch (err) {
+//     console.error('Error:', err);
+
+//     // If validation fails, return a default object that matches the type
+//     return {
+//       seo: ['Error'],
+//       tableOfContents: ['Error occurred while fetching data'],
+//     };
+//   }
+// };
 
 
 

@@ -4,14 +4,19 @@ import { Image, Spacer } from "@nextui-org/react";
 import { Avatar } from '@nextui-org/avatar';
 import { Skeleton } from "@nextui-org/skeleton";
 import { Gist, Summary } from './page';
+import { SeoAndTableOfContents } from './summarizeVideo';
+
+
 
 type RightComponentProps = {
     formSubmitted: boolean;
     gist: Gist
     summary: Summary
+    seoAndTableOfContents: SeoAndTableOfContents
 };
 
-const RightComponent: React.FC<RightComponentProps> = ({ formSubmitted, gist, summary }) => {
+
+const RightComponent: React.FC<RightComponentProps> = ({ formSubmitted, gist, summary, seoAndTableOfContents }) => {
     const [isLoading, setIsLoading] = useState(true);
 
     return (
