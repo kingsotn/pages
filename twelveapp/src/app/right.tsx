@@ -3,9 +3,8 @@ import React, { useState } from 'react';
 import { Image, Spacer } from "@nextui-org/react";
 import { Avatar } from '@nextui-org/avatar';
 import { Skeleton } from "@nextui-org/skeleton";
-import { Gist, Summary } from './page';
-import { SeoAndTableOfContents } from './summarizeVideo';
-
+import { Gist, Summary } from './shit-example';
+import { SeoAndTableOfContents } from './shit-example';
 
 
 type RightComponentProps = {

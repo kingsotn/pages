@@ -15,7 +15,8 @@ const nextConfig = {
 
   // Ensure environment variables are available
   env: {
-    NEXT_PUBLIC_TWELVE_KEY: process.env.NEXT_PUBLIC_TWELVE_KEY,
+    TWELVE_KEY: process.env.TWELVE_KEY,
+    GROQ_API_KEY: process.env.GROQ_API_KEY
   },
 };
 

@@ -6,10 +6,9 @@ import { Textarea } from "@nextui-org/input";
 import { TwelveLabs, Task } from 'twelvelabs-js';
 import Clip from './clip';
 import { TabPressed, TabUnpressed } from './tabs';
-import { fetchGist, fetchSeoAndTableOfContents, fetchSummary } from './summarizeVideo';
-import { Gist, Summary } from './page.jsx';
-import { SeoAndTableOfContents } from './summarizeVideo';
-import { setSourceMapsEnabled } from 'process';
+import { Gist, Summary } from './shit-example.js';
+import { SeoAndTableOfContents } from './shit-example.js';
+import { fetchTwelveLabsData, fetchGroqData } from './api-calls'
 
 const videoTypes = [
     "Informational",
@@ -54,7 +53,7 @@ type LeftComponentProps = {
     setFormSubmitted: React.Dispatch<React.SetStateAction<boolean>>;
     setGist: React.Dispatch<React.SetStateAction<Gist>>
     setSummary: React.Dispatch<React.SetStateAction<Summary>>
-    setSeoAndTableOfContents: React.Dispatch<React.SetStateAction<SeoAndTableOfContents>> 
+    setSeoAndTableOfContents: React.Dispatch<React.SetStateAction<SeoAndTableOfContents>>
 };
 
 const LeftComponent: React.FC<LeftComponentProps> = ({ setFormSubmitted, setGist, setSummary, setSeoAndTableOfContents }) => {
@@ -91,10 +90,14 @@ const LeftComponent: React.FC<LeftComponentProps> = ({ setFormSubmitted, setGist
     const handleGenerateClick = async () => {
         setFormSubmitted(true);
         try {
-            setGist(await fetchGist(videoUrl));
-            setSummary(await fetchSummary(videoUrl));
-            setSeoAndTableOfContents(await fetchSeoAndTableOfContents)
-            console.log(await fetchSummary(videoUrl));
+            const gistData = await fetchTwelveLabsData(videoUrl, 'gist');
+            const summaryData = await fetchTwelveLabsData(videoUrl, 'summary', 0.5, 'summary');
+            const seoAndTocData = await fetchGroqData(videoUrl);
+
+            setGist(gistData)
+            setSummary(summaryData)
+            setSeoAndTableOfContents(seoAndTocData)
+
         } catch (error) {
             console.error('error fetching data:', error);
         }

@@ -1,9 +1,33 @@
-const API_KEY = process.env.NEXT_PUBLIC_TWELVE_KEY; // from .env.local
+import Groq from "groq-sdk";
+
+const TWELVE_KEY = process.env.TWELVE_KEY; // from .env.local
 const BASE_URL = 'https://api.twelvelabs.io/v1.2';
 const TYPES = ['topic', 'hashtag', 'title']; // default types
 const VIDEO_ID = "66959fe83ca9a432304de1c8"
+const GROQ_KEY = process.env.GROQ_API_KEY;
 
-if (!API_KEY) {
+const groq = new Groq({ apiKey: GROQ_KEY });
+
+
+export type Gist = {
+  id: string;
+  title: string;
+  topics: string[];
+  hashtags: string[];
+};
+
+export type Summary = {
+  id: string;
+  summary: string;
+};
+
+export type SeoAndTableOfContents = {
+  seo: string[],
+  tableOfContents: string[],
+}
+
+
+if (!TWELVE_KEY) {
   throw new Error('API key is not defined in environment variables');
 }
 
@@ -25,7 +49,7 @@ const fetchGist = async (videoUrl: string) => {
     method: 'POST',
     headers: {
       accept: 'application/json',
-      'x-api-key': API_KEY as string, // explicitly cast to string
+      'x-api-key': TWELVE_KEY as string, // explicitly cast to string
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({ video_id: videoId, types: TYPES })
@@ -43,7 +67,7 @@ const fetchGist = async (videoUrl: string) => {
   }
 };
 
-let summary_response;
+let fetchSummaryResponse: Summary;
 // function to fetch summary
 const fetchSummary = async (
   videoUrl: string,
@@ -61,7 +85,7 @@ const fetchSummary = async (
     method: 'POST',
     headers: {
       accept: 'application/json',
-      'x-api-key': API_KEY as string, // explicitly cast to string
+      'x-api-key': TWELVE_KEY as string, // explicitly cast to string
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({ temperature, video_id: videoId, type })
@@ -72,8 +96,8 @@ const fetchSummary = async (
     if (!res.ok) {
       throw new Error(`HTTP error! status: ${res.status}`);
     }
-    summary_response = await res.json();
-    return summary_response;
+    fetchSummaryResponse = await res.json();
+    return fetchSummaryResponse;
   } catch (err) {
     console.error('error:', err);
     throw err;
@@ -81,49 +105,41 @@ const fetchSummary = async (
 };
 
 
-
-// function to fetch SEO and Table of Contents
-const prompt_string = `
-Based on this video, I want to generate five keywords for Search Engine Optimization, and a table of contents.
-An example output would be:
-{
-"seo": ["eBike", "Bike", "Bicycle", "Commuters", "Trees"],
-"tableOfContents" : ["Introduction", "Getting Started", "Basic Concepts", "Advanced Techniques", "Practical Applications"],
-}
-`;
-
 // this is a groq request
 const fetchSeoAndTableOfContents = async (
   videoUrl: string,
-  temperature: number = 0.7,
 ) => {
 
-  // use demo video (VIDEO_ID) or not
-  const videoId: string = (videoUrl === "https://www.youtube.com/watch?v=Nsx5RDVKZSk")
-    ? VIDEO_ID
-    : await fetchIndex();
+  // fail here
+  if (videoUrl !== "https://www.youtube.com/watch?v=Nsx5RDVKZSk") throw new Error("Can't use this video... yet");
 
-  const url = `${BASE_URL}/summarize`;
-  const options = {
-    method: 'POST',
-    headers: {
-      accept: 'application/json',
-      'x-api-key': API_KEY as string, // explicitly cast to string
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ temperature, video_id: videoId, prompt_string })
-  };
-
-  try {
-    const res = await fetch(url, options);
-    if (!res.ok) {
-      throw new Error(HTTP error! status: ${ res.status });
+  const temperature: number = 0.5
+  // const system_prompt = `Video Description: ${fetchSummaryResponse.summary}`
+  const system_prompt = `Video Description: The video features a comprehensive discussion led by various prominent figures from Y Combinator, including Michael Seibel, Diana, Gustav, Tom, Harj, and Pete, focusing on the crucial topic of launching startup products. The content emphasizes the common fears and misconceptions that founders have about launching their products, particularly the false belief that a launch must be perfect and that a failed launch will have dire consequences. \nThe speakers stress the importance of launching early and often, arguing that the real value lies in the learning and feedback gained from each launch. They discuss how many founders, especially those with experience in large companies like Apple and Google, mistakenly believe that they need to spend extensive time and resources polishing their products before launching. The video debunks this myth, highlighting that for startups, an iterative approach to launching is far more effective, allowing them to learn from real-world feedback and make necessary improvements.\nMichael Seibel and Diana specifically address the dangers of \"pop culture knowledge\" and the unrealistic expectations it sets for startup founders. They illustrate that most successful companies had multiple launches before gaining traction, using examples like Airbnb, which launched three times before achieving success. The speakers also touch on the psychological barriers that prevent founders from launching, such as the fear of failure and rejection. They advocate for a mindset shift where learning and iteration are prioritized over perfection.\nThe video also covers practical advice on handling the aftermath of a launch, especially if it does not go as planned. Founders are encouraged to diagnose problems analytically, tweak their approaches, and re-launch rather than considering an initial failure as a definitive setback. The importance of targeting the right customers and learning to love rejection is also discussed, as these experiences help refine the product and business approach.\nTowards the end, the video provides motivational insights, encouraging founders to embrace the discomfort of feedback and criticism as part of the growth process. It concludes with a call to action, inviting viewers to explore Y Combinator's resources and support for launching their products and iterating based on customer feedback.\nOverall, the video serves as an informative and motivational guide for startup founders, emphasizing the importance of launching early, learning from each experience, and continuously improving their products to achieve success.`
+  const user_prompt = `
+    Based on this video description, I want to generate JSON Object of 5 keywords for Search Engine Optimization, and 5 for table of contents.
+    An example JSON output would be:
+    {
+    "seo": ["eBike", "Bike", "Bicycle", "Commuters", "Trees"],
+    "tableOfContents" : ["Introduction", "Getting Started", "Basic Concepts", "Advanced Techniques", "Practical Applications"],
     }
-    return await res.json();
-  } catch (err) {
-    console.error('error:', err);
-    throw err;
-  }
+    `;
+
+  console.log(groq.chat.completions.create({
+    messages: [
+      { role: "system", content: system_prompt, },
+      { role: "user", content: user_prompt, },
+    ],
+    model: "llama3-70b-8192",
+    response_format: { type: "json_object" },
+    temperature: temperature,
+    max_tokens: 1024,
+    top_p: 1,
+    stop: null,
+    stream: false,
+  }))
+
+  // return groq_response
 };
 
 
@@ -154,7 +170,7 @@ export { fetchGist, fetchSummary, fetchSeoAndTableOfContents };
 //     method: 'POST',
 //     headers: {
 //       accept: 'application/json',
-//       'x-api-key': API_KEY as string,
+//       'x-api-key': TWELVE_KEY as string,
 //       'Content-Type': 'application/json'
 //     },
 //     body: JSON.stringify({ temperature, video_id: videoId, prompt_string })

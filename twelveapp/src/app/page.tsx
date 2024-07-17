@@ -3,19 +3,8 @@ import React, { useEffect, useState } from 'react';
 import { NextUIProvider } from "@nextui-org/react";
 import LeftComponent from "./left";
 import RightComponent from "./right";
-import { SeoAndTableOfContents } from './summarizeVideo';
-
-export type Gist = {
-  id: string;
-  title: string;
-  topics: string[];
-  hashtags: string[];
-};
-
-export type Summary = {
-  id: string;
-  summary: string;
-};
+import { Summary, Gist } from './shit-example';
+import { SeoAndTableOfContents } from './shit-example';
 
 
 export default function Home() {
