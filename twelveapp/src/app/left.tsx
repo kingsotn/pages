@@ -8,7 +8,15 @@ import Clip from './clip';
 import { TabPressed, TabUnpressed } from './tabs';
 import { Gist, Summary } from './shit-example.js';
 import { SeoAndTableOfContents } from './shit-example.js';
-import { fetchTwelveLabsData, fetchGroqData } from './api-calls'
+import {
+    fetchTwelveLabsData,
+    fetchGroqData,
+    transformGistData,
+    transformSeoAndTocData,
+    transformSummaryData,
+    TwelveLabsGistResponse,
+    TwelveLabsSummaryResponse
+} from './api-calls'
 
 const videoTypes = [
     "Informational",
@@ -94,9 +102,9 @@ const LeftComponent: React.FC<LeftComponentProps> = ({ setFormSubmitted, setGist
             const summaryData = await fetchTwelveLabsData(videoUrl, 'summary', 0.5, 'summary');
             const seoAndTocData = await fetchGroqData(videoUrl);
 
-            setGist(gistData)
-            setSummary(summaryData)
-            setSeoAndTableOfContents(seoAndTocData)
+            setGist(transformGistData(gistData as TwelveLabsGistResponse));
+            setSummary(transformSummaryData(summaryData as TwelveLabsSummaryResponse));
+            setSeoAndTableOfContents(transformSeoAndTocData(seoAndTocData));
 
         } catch (error) {
             console.error('error fetching data:', error);
@@ -239,9 +247,6 @@ const LeftComponent: React.FC<LeftComponentProps> = ({ setFormSubmitted, setGist
                     </Button>
                 </div>
             </div>
-
-
-
         </div >
     );
 };

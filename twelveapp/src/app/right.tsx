@@ -17,6 +17,7 @@ type RightComponentProps = {
 
 const RightComponent: React.FC<RightComponentProps> = ({ formSubmitted, gist, summary, seoAndTableOfContents }) => {
     const [isLoading, setIsLoading] = useState(true);
+    const keys = Object.keys(seoAndTableOfContents);
 
     return (
         <div className="flex flex-col pt-24 px-20 h-full p-4 bg-white">
@@ -89,7 +90,7 @@ const RightComponent: React.FC<RightComponentProps> = ({ formSubmitted, gist, su
             {formSubmitted ? (
                 <Skeleton className="h-32 rounded w-2/3 min-w-[500.66px]" isLoaded={summary.summary.length > 0}>
                     <div className="text-osm-black w-full space-y-8">
-                        {Array.from({ length: 3 }).map((_, index) => (
+                        {Array.from({ length: 1 }).map((_, index) => (
                             <div key={index} className="w-full min-w-[500.66px]">
                                 {summary.summary}
                             </div>

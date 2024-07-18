@@ -1,26 +1,39 @@
 /**
- * This file contains utility functions for making API calls to our server-side routes.
- * It provides a clean interface for components to interact with the video analysis features,
+ * This file contains utility functions and typings for making API calls to our server-side routes.
+ * It provides a clean type for components to interact with the video analysis features,
  * abstracting away the details of the HTTP requests.
  */
-
-
-// TwelveLabs Gist response type
-interface TwelveLabsGistResponse {
+export type GistState = {
     id: string;
     title: string;
     topics: string[];
     hashtags: string[];
 }
 
-// TwelveLabs Summary response type
-interface TwelveLabsSummaryResponse {
+export type SummaryState = {
     id: string;
     summary: string;
 }
 
-// GROQ response type
-interface GroqResponse {
+export type SeoAndTableOfContentsState = {
+    seo: string[];
+    tableOfContents: string[];
+}
+
+// Types for API responses
+export type TwelveLabsGistResponse = {
+    id: string;
+    title: string;
+    topics: string[];
+    hashtags: string[];
+}
+
+export type TwelveLabsSummaryResponse = {
+    id: string;
+    summary: string;
+}
+
+export type GroqResponse = {
     id: string;
     object: string;
     created: number;
@@ -51,21 +64,18 @@ interface GroqResponse {
 
 export async function fetchTwelveLabsData(
     videoUrl: string,
-    action: 'gist' | 'summary',
-    type?: string,
+    action: 'gist' | 'summary' | 'highlight' | 'chapter',
+    temperature?: number,
     prompt?: string,
-    temperature?: number
 ): Promise<TwelveLabsGistResponse | TwelveLabsSummaryResponse> {
     const response = await fetch('/api/twelvelabs', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ videoUrl, action, temperature, type }),
+        body: JSON.stringify({ videoUrl, action, temperature, prompt }),
     });
-    if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-    }
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
     return await response.json();
 }
 
@@ -77,8 +87,34 @@ export async function fetchGroqData(videoUrl: string): Promise<GroqResponse> {
         },
         body: JSON.stringify({ videoUrl }),
     });
-    if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-    }
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
     return await response.json();
+}
+
+// transforms the response from the api to the actual typing that we expect for the state changes in the frontend client
+export function transformGistData(data: TwelveLabsGistResponse): GistState {
+    return {
+        id: data.id,
+        title: data.title,
+        topics: data.topics,
+        hashtags: data.hashtags
+    };
+}
+
+export function transformSummaryData(data: TwelveLabsSummaryResponse): SummaryState {
+    return {
+        id: data.id,
+        summary: data.summary
+    };
+}
+
+export function transformSeoAndTocData(data: GroqResponse): SeoAndTableOfContentsState {
+    console.log("groq transformSeoAndTocData response", data);
+    // Check if data is already parsed
+    const content = typeof data === 'string' ? JSON.parse(data) : data;
+
+    return {
+        seo: content.SEOKeywords || [],
+        tableOfContents: content.TableOfContents || []
+    };
 }
