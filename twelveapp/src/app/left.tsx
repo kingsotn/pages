@@ -6,8 +6,8 @@ import { Textarea } from "@nextui-org/input";
 import { TwelveLabs, Task } from 'twelvelabs-js';
 import Clip from './clip';
 import { TabPressed, TabUnpressed } from './tabs';
-import { Gist, Summary } from './shit-example.js';
-import { SeoAndTableOfContents } from './shit-example.js';
+import { Gist, Summary } from './../../pages/api/twelvelabs.js';
+import { SeoAndTableOfContents } from '../../pages/api/groq';
 import {
     fetchTwelveLabsData,
     fetchGroqData,

@@ -3,7 +3,12 @@ import Groq from "groq-sdk";
 
 const GROQ_KEY = process.env.GROQ_API_KEY;
 
-const groq = new Groq({ apiKey: GROQ_KEY });
+const groq = new Groq({ apiKey: GROQ_KEY })
+
+export type SeoAndTableOfContents = {
+  seo: string[],
+  tableOfContents: string[],
+}
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {

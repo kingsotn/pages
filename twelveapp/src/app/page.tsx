@@ -3,8 +3,8 @@ import React, { useEffect, useState } from 'react';
 import { NextUIProvider } from "@nextui-org/react";
 import LeftComponent from "./left";
 import RightComponent from "./right";
-import { Summary, Gist } from './shit-example';
-import { SeoAndTableOfContents } from './shit-example';
+import { Gist, Summary } from '../../pages/api/twelvelabs';
+import { SeoAndTableOfContents } from '../../pages/api/groq';
 
 
 export default function Home() {
