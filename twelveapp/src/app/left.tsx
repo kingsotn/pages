@@ -110,7 +110,7 @@ const LeftComponent: React.FC<LeftComponentProps> = ({ setFormSubmitted, setGist
             // mock
             setGist({
                 id: "66959fe83ca9a432304de1c8",
-                title: "Startups And Shit Mock",
+                title: "Startups And Title Mock",
                 topics: ["Startups", "Startups1", "startups3"],
                 hashtags: ["#1", "#2", "#3"],
             });

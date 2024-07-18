@@ -6,7 +6,7 @@ import { Skeleton } from "@nextui-org/skeleton";
 import { Gist, Summary } from '../../pages/api/twelvelabs';
 import { SeoAndTableOfContents } from '../../pages/api/groq';
 import { TableOfContents } from './tableOfContents';
-
+import RegeneratePopover from './popover';
 
 type RightComponentProps = {
     formSubmitted: boolean;
@@ -14,7 +14,6 @@ type RightComponentProps = {
     summary: Summary
     seoAndTableOfContents: SeoAndTableOfContents
 };
-
 
 const RightComponent: React.FC<RightComponentProps> = ({ formSubmitted, gist, summary, seoAndTableOfContents }) => {
     const [isLoading, setIsLoading] = useState(true);
@@ -24,6 +23,18 @@ const RightComponent: React.FC<RightComponentProps> = ({ formSubmitted, gist, su
     const scrollToSection = (sectionId: string) => {
         sectionRefs.current[sectionId]?.scrollIntoView({ behavior: 'smooth' });
     };
+
+    const setRef = (el: HTMLDivElement | null, key: string) => {
+        if (key) {
+            sectionRefs.current[key] = el;
+        }
+    };
+
+    const handleRegenerate = (index: number, prompt: string) => {
+        // Implement your regeneration logic here
+        console.log(`Regenerating content for index ${index} with prompt: ${prompt}`);
+    };
+
 
     return (
         <div className="flex flex-col pt-24 px-20 min-h-screen p-4 bg-white items-center w-full">
@@ -97,13 +108,19 @@ const RightComponent: React.FC<RightComponentProps> = ({ formSubmitted, gist, su
 
                     {/* Content */}
                     <Spacer y={8} />
+                    <Spacer y={8} />
                     {formSubmitted ? (
-                        <Skeleton className="h-32 rounded w-full min-w-[500.66px]" isLoaded={summary.summary.length > 0}>
+                        <Skeleton className="rounded w-full min-w-[500.66px]" isLoaded={summary.summary.length > 0}>
                             <div className="text-osm-black w-full space-y-8">
                                 {Array.from({ length: contentLength }).map((_, index) => (
-                                    <div key={index} className="w-full min-w-[500.66px]">
-                                        {summary.summary}
-                                    </div>
+                                    <RegeneratePopover
+                                        key={index}
+                                        index={index}
+                                        content={summary.summary}
+                                        tableOfContentsItem={seoAndTableOfContents.tableOfContents[index]}
+                                        setRef={setRef}
+                                        onRegenerate={handleRegenerate}
+                                    />
                                 ))}
                             </div>
                         </Skeleton>
@@ -115,7 +132,7 @@ const RightComponent: React.FC<RightComponentProps> = ({ formSubmitted, gist, su
                         </div>
                     )}
                 </div>
-                <div className="hidden custom:flex flex-col min-h-[1450px]"> 
+                <div className="hidden custom:flex flex-col min-h-[1450px]">
                     <TableOfContents
                         items={seoAndTableOfContents.tableOfContents.slice(0, contentLength)}
                         onItemClick={scrollToSection}
