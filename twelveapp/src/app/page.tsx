@@ -22,6 +22,7 @@ export default function Home() {
     seo: [],
     tableOfContents: [],
   });
+  const [videoUrl, setVideoUrl] = useState<string>("");
 
   useEffect(() => {
     console.log(gist)
@@ -31,11 +32,11 @@ export default function Home() {
     <NextUIProvider>
       <main className="min-h-screen flex flex-col md:flex-row">
         <div className="w-full md:w-[670px] min-w-[670px] flex-shrink-0 flex flex-col border-b-1 md:border-b-0 md:border-r-1 border-gray-300 bg-gray-50 md:fixed md:left-0 md:top-0 md:bottom-0">
-          <LeftComponent setFormSubmitted={setFormSubmitted} setGist={setGist} setSummary={setSummary} setSeoAndTableOfContents={setSeoAndTableOfContents} />
+          <LeftComponent setFormSubmitted={setFormSubmitted} setGist={setGist} setSummary={setSummary} setSeoAndTableOfContents={setSeoAndTableOfContents} videoUrl={videoUrl} setVideoUrl={setVideoUrl}/>
         </div>
         <div className="w-full md:w-[calc(100%-670px)] md:ml-[670px] overflow-y-auto overflow-x-hidden">
           <div className="min-w-[670px] md:min-w-0">
-            <RightComponent formSubmitted={formSubmitted} gist={gist} summary={summary} seoAndTableOfContents={seoAndTableOfContents} />
+            <RightComponent formSubmitted={formSubmitted} gist={gist} summary={summary} seoAndTableOfContents={seoAndTableOfContents} videoUrl={videoUrl} />
           </div>
         </div>
       </main>

@@ -7,18 +7,23 @@ import { Gist, Summary } from '../../pages/api/twelvelabs';
 import { SeoAndTableOfContents } from '../../pages/api/groq';
 import { TableOfContents } from './tableOfContents';
 import RegeneratePopover from './popover';
+import { fetchGroqData, GroqResponse } from './api-calls';
+
 
 type RightComponentProps = {
     formSubmitted: boolean;
     gist: Gist
     summary: Summary
     seoAndTableOfContents: SeoAndTableOfContents
+    videoUrl: string
 };
 
-const RightComponent: React.FC<RightComponentProps> = ({ formSubmitted, gist, summary, seoAndTableOfContents }) => {
+const RightComponent: React.FC<RightComponentProps> = ({ formSubmitted, gist, summary, seoAndTableOfContents, videoUrl }) => {
     const [isLoading, setIsLoading] = useState(true);
     const [contentLength, setContentLength] = useState(5);
     const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
+    const [isRegenerating, setIsRegenerating] = useState(false);
+    const [regeneratedContent, setRegeneratedContent] = useState<Record<number, string>>({});
 
     const scrollToSection = (sectionId: string) => {
         sectionRefs.current[sectionId]?.scrollIntoView({ behavior: 'smooth' });
@@ -30,9 +35,17 @@ const RightComponent: React.FC<RightComponentProps> = ({ formSubmitted, gist, su
         }
     };
 
-    const handleRegenerate = (index: number, prompt: string) => {
-        // Implement your regeneration logic here
-        console.log(`Regenerating content for index ${index} with prompt: ${prompt}`);
+    const handleRegenerate = async (index: number, prompt: string) => {
+        setIsRegenerating(true);
+        try {
+            const response: GroqResponse = await fetchGroqData(videoUrl);
+            const newContent = response.choices[0]?.message?.content || '';
+            setRegeneratedContent(prev => ({ ...prev, [index]: newContent }));
+        } catch (error) {
+            console.error('Error regenerating content:', error);
+        } finally {
+            setIsRegenerating(false);
+        }
     };
 
 

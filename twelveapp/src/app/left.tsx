@@ -62,13 +62,14 @@ type LeftComponentProps = {
     setGist: React.Dispatch<React.SetStateAction<Gist>>
     setSummary: React.Dispatch<React.SetStateAction<Summary>>
     setSeoAndTableOfContents: React.Dispatch<React.SetStateAction<SeoAndTableOfContents>>
+    videoUrl: string
+    setVideoUrl: React.Dispatch<React.SetStateAction<string>>
 };
 
-const LeftComponent: React.FC<LeftComponentProps> = ({ setFormSubmitted, setGist, setSummary, setSeoAndTableOfContents }) => {
+const LeftComponent: React.FC<LeftComponentProps> = ({ setFormSubmitted, setGist, setSummary, setSeoAndTableOfContents, videoUrl, setVideoUrl }) => {
     const [groupSelected, setGroupSelected] = useState<string[]>([]);
     const [goalSelected, setGoalSelected] = useState<string[]>([]);
     const [additionalInfo, setAdditionalInfo] = useState<string>('');
-    const [videoUrl, setVideoUrl] = useState<string>("");
     const [formFilled, setFormFilled] = useState<boolean>(false);
     const [isTabPressed, setIsTabPressed] = useState<boolean>(false)
 
