@@ -7,6 +7,7 @@ interface RegeneratePopoverProps {
     tableOfContentsItem: string;
     setRef: (el: HTMLDivElement | null, key: string) => void;
     onRegenerate: (index: number, prompt: string) => void;
+    isRegenerating: boolean;
 }
 
 const RegeneratePopover: React.FC<RegeneratePopoverProps> = ({
@@ -14,15 +15,16 @@ const RegeneratePopover: React.FC<RegeneratePopoverProps> = ({
     content,
     tableOfContentsItem,
     setRef,
-    onRegenerate
+    onRegenerate,
+    isRegenerating
 }) => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [prompt, setPrompt] = useState<string>("");
     const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(true);
 
     useEffect(() => {
-        setIsButtonDisabled(prompt.trim().length === 0);
-    }, [prompt]);
+        setIsButtonDisabled(prompt.trim().length === 0 || isRegenerating);
+    }, [prompt, isRegenerating]);
 
     return (
         <Popover
@@ -48,19 +50,20 @@ const RegeneratePopover: React.FC<RegeneratePopoverProps> = ({
                                 value={prompt}
                                 radius='sm'
                                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPrompt(e.target.value)}
+                                disabled={isRegenerating}
                             />
                             <Button
                                 color="primary"
                                 radius='sm'
                                 isDisabled={isButtonDisabled}
+                                isLoading={isRegenerating}
                                 onClick={() => {
                                     onRegenerate(index, prompt);
-                                    setIsOpen(false);
                                     setPrompt("");
                                 }}
                             >
                                 <div className="text-osm-black">
-                                    Regenerate ⌘+↵
+                                    {isRegenerating ? "" : "Regenerate ⌘+↵"}
                                 </div>
                             </Button>
                         </div>

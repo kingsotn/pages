@@ -6,7 +6,7 @@ import { Skeleton } from "@nextui-org/skeleton";
 import { Gist, Summary } from '../../pages/api/twelvelabs';
 import { SeoAndTableOfContents } from '../../pages/api/groq';
 import { TableOfContents } from './tableOfContents';
-import RegeneratePopover from './popover';
+import RegeneratePopover from './RegeneratePopover';
 import { fetchGroqData, GroqResponse } from './api-calls';
 
 
@@ -121,7 +121,6 @@ const RightComponent: React.FC<RightComponentProps> = ({ formSubmitted, gist, su
 
                     {/* Content */}
                     <Spacer y={8} />
-                    <Spacer y={8} />
                     {formSubmitted ? (
                         <Skeleton className="rounded w-full min-w-[500.66px]" isLoaded={summary.summary.length > 0}>
                             <div className="text-osm-black w-full space-y-8">
@@ -129,10 +128,11 @@ const RightComponent: React.FC<RightComponentProps> = ({ formSubmitted, gist, su
                                     <RegeneratePopover
                                         key={index}
                                         index={index}
-                                        content={summary.summary}
+                                        content={regeneratedContent[index] || summary.summary}
                                         tableOfContentsItem={seoAndTableOfContents.tableOfContents[index]}
                                         setRef={setRef}
                                         onRegenerate={handleRegenerate}
+                                        isRegenerating={isRegenerating}
                                     />
                                 ))}
                             </div>
