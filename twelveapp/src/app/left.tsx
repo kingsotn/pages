@@ -98,14 +98,27 @@ const LeftComponent: React.FC<LeftComponentProps> = ({ setFormSubmitted, setGist
     const handleGenerateClick = async () => {
         setFormSubmitted(true);
         try {
-            const gistData = await fetchTwelveLabsData(videoUrl, 'gist');
-            const summaryData = await fetchTwelveLabsData(videoUrl, 'summary', 0.5, 'summary');
-            const seoAndTocData = await fetchGroqData(videoUrl);
+            // real
+            // const gistData = await fetchTwelveLabsData(videoUrl, 'gist');
+            // const summaryData = await fetchTwelveLabsData(videoUrl, 'summary', 0.5, 'summary');
+            // const seoAndTocData = await fetchGroqData(videoUrl);
 
-            setGist(transformGistData(gistData as TwelveLabsGistResponse));
-            setSummary(transformSummaryData(summaryData as TwelveLabsSummaryResponse));
-            setSeoAndTableOfContents(transformSeoAndTocData(seoAndTocData));
+            // setGist(transformGistData(gistData as TwelveLabsGistResponse));
+            // setSummary(transformSummaryData(summaryData as TwelveLabsSummaryResponse));
+            // setSeoAndTableOfContents(transformSeoAndTocData(seoAndTocData));
 
+            // mock
+            setGist({
+                id: "66959fe83ca9a432304de1c8",
+                title: "Startups And Shit Mock",
+                topics: ["Startups", "Startups1", "startups3"],
+                hashtags: ["#1", "#2", "#3"],
+            });
+            setSummary({ id: "66959fe83ca9a432304de1c8", summary: "The video features a comprehensive discussion led by various prominent figures from Y Combinator, including Michael Seibel, Diana, Gustav, Tom, Harj, and Pete, focusing on the crucial topic of launching startup products. The content emphasizes the common fears and misconceptions that founders have about launching their products, particularly the false belief that a launch must be perfect and that a failed launch will have dire consequences. \nThe speakers stress the importance of launching early and often, arguing that the real value lies in the learning and feedback gained from each launch. They discuss how many founders, especially those with experience in large companies like Apple and Google, mistakenly believe that they need to spend extensive time and resources polishing their products before launching. The video debunks this myth, highlighting that for startups, an iterative approach to launching is far more effective, allowing them to learn from real-world feedback and make necessary improvements.\nMichael Seibel and Diana specifically address the dangers of \"pop culture knowledge\" and the unrealistic expectations it sets for startup founders. They illustrate that most successful companies had multiple launches before gaining traction, using examples like Airbnb, which launched three times before achieving success. The speakers also touch on the psychological barriers that prevent founders from launching, such as the fear of failure and rejection. They advocate for a mindset shift where learning and iteration are prioritized over perfection.\nThe video also covers practical advice on handling the aftermath of a launch, especially if it does not go as planned. Founders are encouraged to diagnose problems analytically, tweak their approaches, and re-launch rather than considering an initial failure as a definitive setback. The importance of targeting the right customers and learning to love rejection is also discussed, as these experiences help refine the product and business approach.\nTowards the end, the video provides motivational insights, encouraging founders to embrace the discomfort of feedback and criticism as part of the growth process. It concludes with a call to action, inviting viewers to explore Y Combinator's resources and support for launching their products and iterating based on customer feedback.\nOverall, the video serves as an informative and motivational guide for startup founders, emphasizing the importance of launching early, learning from each experience, and continuously improving their products to achieve success.", }); //mock
+            setSeoAndTableOfContents({
+                seo: ["seo1", "seo2", "seo3", "seo4", "seo5"],
+                tableOfContents: ["tableOfContents1", "tableOfContents2", "tableOfContents3", "tableOfContents4", "tableOfContents5"],
+            });
         } catch (error) {
             console.error('error fetching data:', error);
         }

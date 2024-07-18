@@ -51,7 +51,8 @@ const RightComponent: React.FC<RightComponentProps> = ({ formSubmitted, gist, su
                     <>
                         <Skeleton className="h-12 rounded w-1/2 min-w-[390px]" isLoaded={gist.title.length > 0} disableAnimation>
                             <h2 className="h-10 font-serif text-4xl font-medium w-3/4 text-osm-black min-w-[390px] text-nowrap">
-                                {gist.title.split(":")[1]}
+                                {/*only split if it contains ":", otherwise just render the entire gist.title*/}
+                                {gist.title.includes(":") ? gist.title.split(":")[1].trim() : gist.title}
                             </h2>
 
                         </Skeleton>
