@@ -18,8 +18,7 @@ type RightComponentProps = {
 
 const RightComponent: React.FC<RightComponentProps> = ({ formSubmitted, gist, summary, seoAndTableOfContents }) => {
     const [isLoading, setIsLoading] = useState(true);
-    const keys = Object.keys(seoAndTableOfContents);
-    const [contentLength, setContentLength] = useState(30);
+    const [contentLength, setContentLength] = useState(5);
     const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
 
     const scrollToSection = (sectionId: string) => {
@@ -27,9 +26,9 @@ const RightComponent: React.FC<RightComponentProps> = ({ formSubmitted, gist, su
     };
 
     return (
-        <div className="flex flex-col pt-24 px-20 h-full p-4 bg-white items-center w-full">
+        <div className="flex flex-col pt-24 px-20 min-h-screen p-4 bg-white items-center w-full">
             {/* Banner */}
-            <div className="w-full h-[400px] relative overflow-hidden transition-transform duration-300 hover:scale-[101%] shadow-lg rounded-xl min-w-[400px] max-w-3xl">
+            <div className="w-full h-[400px] relative overflow-hidden transition-transform duration-300 hover:scale-[101%] shadow-lg rounded-xl min-w-[400px] max-w-5xl">
                 {isLoading && (
                     <Skeleton className="absolute inset-0 flex flex-col pt-24 px-40 min-h-[400px] max-h-[400px] p-4 rounded-xl" />
                 )}
@@ -52,7 +51,7 @@ const RightComponent: React.FC<RightComponentProps> = ({ formSubmitted, gist, su
             </div>
 
             {/* below banner*/}
-            <div className='flex justify-center custom:justify-between w-full max-w-3xl'>
+            <div className='flex justify-center custom:justify-between w-full max-w-5xl h-full'>
                 <div className="flex-grow max-w-2xl custom:max-w-none">
                     {/* Title */}
                     <Spacer y={8} />
@@ -60,7 +59,7 @@ const RightComponent: React.FC<RightComponentProps> = ({ formSubmitted, gist, su
                         {formSubmitted ? (
                             <>
                                 <Skeleton className="h-12 rounded w-1/2 min-w-[390px]" isLoaded={gist.title.length > 0} disableAnimation>
-                                    <h2 className="h-10 font-serif text-4xl font-medium w-3/4 text-osm-black min-w-[390px] text-nowrap">
+                                    <h2 className="h-10 font-serif text-5xl font-medium w-full text-osm-black min-w-[390px] text-nowrap">
                                         {/*only split if it contains ":", otherwise just render the entire gist.title*/}
                                         {gist.title.includes(":") ? gist.title.split(":")[1].trim() : gist.title}
                                     </h2>
@@ -99,7 +98,7 @@ const RightComponent: React.FC<RightComponentProps> = ({ formSubmitted, gist, su
                     {/* Content */}
                     <Spacer y={8} />
                     {formSubmitted ? (
-                        <Skeleton className="h-32 rounded w-2/3 min-w-[500.66px]" isLoaded={summary.summary.length > 0}>
+                        <Skeleton className="h-32 rounded w-full min-w-[500.66px]" isLoaded={summary.summary.length > 0}>
                             <div className="text-osm-black w-full space-y-8">
                                 {Array.from({ length: contentLength }).map((_, index) => (
                                     <div key={index} className="w-full min-w-[500.66px]">
@@ -109,20 +108,22 @@ const RightComponent: React.FC<RightComponentProps> = ({ formSubmitted, gist, su
                             </div>
                         </Skeleton>
                     ) : (
-                        <div className="flex flex-col space-y-4">
+                        <div className="flex flex-col space-y-4 w-full">
                             {Array.from({ length: contentLength }).map((_, index) => (
-                                <Skeleton key={index} className="h-32 rounded w-2/3 min-w-[390px]" />
+                                <Skeleton key={index} className="h-32 rounded w-full min-w-[390px]" />
                             ))}
                         </div>
                     )}
                 </div>
-                <TableOfContents
-                    items={seoAndTableOfContents.tableOfContents.slice(0, contentLength)}
-                    onItemClick={scrollToSection}
-                    isLoaded={formSubmitted && summary.summary.length > 0}
-                    skeletonCount={contentLength}
-                    className="hidden custom:block ml-10 mt-8 min-w-[150px] h-max sticky top-0"
-                />
+                <div className="hidden custom:flex flex-col min-h-[1450px]"> 
+                    <TableOfContents
+                        items={seoAndTableOfContents.tableOfContents.slice(0, contentLength)}
+                        onItemClick={scrollToSection}
+                        isLoaded={formSubmitted && summary.summary.length > 0}
+                        skeletonCount={contentLength}
+                        className="hidden custom:block ml-10 mt-8 min-w-[150px] sticky top-10"
+                    />
+                </div>
             </div>
         </div>
     );

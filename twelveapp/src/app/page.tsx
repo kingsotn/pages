@@ -6,7 +6,6 @@ import RightComponent from "./right";
 import { Gist, Summary } from '../../pages/api/twelvelabs';
 import { SeoAndTableOfContents } from '../../pages/api/groq';
 
-
 export default function Home() {
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [gist, setGist] = useState<Gist>({

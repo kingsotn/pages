@@ -9,15 +9,15 @@ interface TableOfContentsProps {
     className?: string;
 }
 
-export const TableOfContents: React.FC<TableOfContentsProps> = ({ 
-    items, 
-    onItemClick, 
-    isLoaded, 
+export const TableOfContents: React.FC<TableOfContentsProps> = ({
+    items,
+    onItemClick,
+    isLoaded,
     skeletonCount,
     className = ""
 }) => {
     return (
-        <div className={`w-64 overflow-auto ${className}`}>
+        <div className={`w-64 ${className}`}>
             {isLoaded ? (
                 <Listbox
                     aria-label="Table of Contents"
