@@ -22,7 +22,10 @@ const config: Config = {
       },
       fontFamily: {
         'osm-font': '14px__Inter_aaf875',
-      }
+      },
+      screens: {
+        'custom': '1350px',
+      },
     },
   },
   plugins: [nextui()],

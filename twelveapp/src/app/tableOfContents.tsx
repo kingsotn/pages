@@ -17,8 +17,7 @@ export const TableOfContents: React.FC<TableOfContentsProps> = ({
     className = ""
 }) => {
     return (
-        <div className={`w-64 p-4 bg-gray-100 overflow-auto ${className}`}>
-            <h2 className="text-xl mb-4 font-bold">Table of Contents</h2>
+        <div className={`w-64 overflow-auto ${className}`}>
             {isLoaded ? (
                 <Listbox
                     aria-label="Table of Contents"

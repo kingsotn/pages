@@ -27,7 +27,7 @@ const RightComponent: React.FC<RightComponentProps> = ({ formSubmitted, gist, su
     };
 
     return (
-        <div className="flex flex-col pt-24 px-20 h-full p-4 bg-white">
+        <div className="flex flex-col pt-24 px-20 h-full p-4 bg-white items-center w-full">
             {/* Banner */}
             <div className="w-full h-[400px] relative overflow-hidden transition-transform duration-300 hover:scale-[101%] shadow-lg rounded-xl min-w-[400px] max-w-3xl">
                 {isLoading && (
@@ -50,8 +50,10 @@ const RightComponent: React.FC<RightComponentProps> = ({ formSubmitted, gist, su
                     />
                 )}
             </div>
-            <div className='flex'>
-                <div>
+
+            {/* below banner*/}
+            <div className='flex justify-center custom:justify-between w-full max-w-3xl'>
+                <div className="flex-grow max-w-2xl custom:max-w-none">
                     {/* Title */}
                     <Spacer y={8} />
                     <div>
@@ -109,7 +111,7 @@ const RightComponent: React.FC<RightComponentProps> = ({ formSubmitted, gist, su
                     ) : (
                         <div className="flex flex-col space-y-4">
                             {Array.from({ length: contentLength }).map((_, index) => (
-                                <Skeleton key={index} className="h-32 rounded w-2/3 min-w-[430px]" />
+                                <Skeleton key={index} className="h-32 rounded w-2/3 min-w-[390px]" />
                             ))}
                         </div>
                     )}
@@ -119,7 +121,7 @@ const RightComponent: React.FC<RightComponentProps> = ({ formSubmitted, gist, su
                     onItemClick={scrollToSection}
                     isLoaded={formSubmitted && summary.summary.length > 0}
                     skeletonCount={contentLength}
-                    className="hidden xl:block ml-20 mt-8 min-w-[150px] h-max sticky top-0"
+                    className="hidden custom:block ml-10 mt-8 min-w-[150px] h-max sticky top-0"
                 />
             </div>
         </div>
