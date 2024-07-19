@@ -86,7 +86,8 @@ const RightComponent: React.FC<RightComponentProps> = ({ formSubmitted, gist, su
                 {formSubmitted && (
                     <Image
                         // src="https://app.requestly.io/delay/0/https://images.wallpaperscraft.com/image/single/city_aerial_view_road_156925_2560x1024.jpg"
-                        src="https://imgcdn.stablediffusionweb.com/2024/7/16/f7245865-804f-409c-99d3-6a3a5e672a50.jpg"
+                        // src="https://imgcdn.stablediffusionweb.com/2024/7/16/f7245865-804f-409c-99d3-6a3a5e672a50.jpg"
+                        src="https://picsum.photos/1024/400"
                         alt="Banner Image"
                         classNames={{
                             wrapper: "w-full min-w-full min-h-[400px] max-h-[400px]",
@@ -111,8 +112,11 @@ const RightComponent: React.FC<RightComponentProps> = ({ formSubmitted, gist, su
                             <>
                                 <Skeleton className="h-12 rounded w-1/2 min-w-[390px]" isLoaded={gist.title.length > 0} disableAnimation>
                                     <h2 className="h-10 font-serif text-5xl font-medium w-full text-osm-black min-w-[390px] text-nowrap">
-                                        {/*only split if it contains ":", otherwise just render the entire gist.title*/}
-                                        {gist.title.includes(":") ? gist.title.split(":")[1].trim() : gist.title}
+                                        {(() => {
+                                            const title = gist.title.includes(":") ? gist.title.split(":")[1].trim() : gist.title;
+                                            const words = title.split(" ");
+                                            return words.length > 5 ? words.slice(-5).join(" ") : title;
+                                        })()}
                                     </h2>
 
                                 </Skeleton>
