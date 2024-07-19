@@ -1,6 +1,6 @@
 "use client"
 import React, { useState, useEffect } from 'react';
-import { Input, CheckboxGroup, Button, Spacer } from "@nextui-org/react";
+import { Input, CheckboxGroup, Button, Spacer, Slider } from "@nextui-org/react";
 import { CustomCheckbox } from "./CustomCheckbox.jsx";
 import { Textarea } from "@nextui-org/input";
 import { TwelveLabs, Task } from 'twelvelabs-js';
@@ -108,7 +108,7 @@ const LeftComponent: React.FC<LeftComponentProps> = ({ setFormSubmitted, setGist
     const handleGenerateClick = async () => {
         setFormSubmitted(true);
         setDisableButton(true);
-        
+
         try {
             // real
             const gistData = await fetchTwelveLabsData(videoUrl, 'gist');
@@ -140,7 +140,7 @@ const LeftComponent: React.FC<LeftComponentProps> = ({ setFormSubmitted, setGist
 
     return (
         <div className='bg-gray-50 px-24 pt-24 min-w-[330px]'>
-            <h1 className="text-2xl font-serif ">Generate SEO Page</h1>
+            <h1 className="text-2xl font-serif ">Generate Page</h1>
             <Spacer y={1} />
             <p className="font-osm-font text-xs leading-normal text-gray-700">
                 This app allows you to automatically generate SEO-optimized content via Youtube video upload and the
@@ -224,6 +224,20 @@ const LeftComponent: React.FC<LeftComponentProps> = ({ setFormSubmitted, setGist
                 </CheckboxGroup>
 
             </div>
+
+            <Spacer y={10} />
+            <Slider
+                size="sm"
+                step={1}
+                className="gap-1 text-osm-black max-w-md"
+                color="primary"
+                label={<><span>How many sections?</span></>}
+                showSteps={true}
+                maxValue={8}
+                minValue={1}
+                defaultValue={sectionCount}
+                onChange={(value: number | number[]) => setSectionCount(value as number)}
+            />
 
             <Spacer y={10} />
             <div>
