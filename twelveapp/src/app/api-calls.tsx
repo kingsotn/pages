@@ -1,3 +1,5 @@
+import { RegeneratedData } from "./right";
+
 /**
  * This file contains utility functions and typings for making API calls to our server-side routes.
  * It provides a clean type for components to interact with the video analysis features,
@@ -79,13 +81,18 @@ export async function fetchTwelveLabsData(
     return await response.json();
 }
 
-export async function fetchGroqData(videoUrl: string): Promise<GroqResponse> {
+export type TitleAndContent = {
+    title: string,
+    content: string
+}
+
+export async function fetchGroqData(videoUrl: string, action: 'regenerate' | 'generate', prev_title: string, prev_content: string, popoverPrompt: string): Promise<any> {
     const response = await fetch('/api/groq', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ videoUrl }),
+        body: JSON.stringify({ videoUrl, action, prev_title, prev_content, popoverPrompt }),
     });
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
     return await response.json();

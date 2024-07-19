@@ -1,5 +1,5 @@
 "use client"
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Image, Spacer } from "@nextui-org/react";
 import { Avatar } from '@nextui-org/avatar';
 import { Skeleton } from "@nextui-org/skeleton";
@@ -18,12 +18,21 @@ type RightComponentProps = {
     videoUrl: string
 };
 
+export type RegeneratedData = {
+    new_title: string;
+    new_content: string;
+};
+
 const RightComponent: React.FC<RightComponentProps> = ({ formSubmitted, gist, summary, seoAndTableOfContents, videoUrl }) => {
     const [isLoading, setIsLoading] = useState(true);
     const [contentLength, setContentLength] = useState(5);
     const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
     const [isRegenerating, setIsRegenerating] = useState(false);
-    const [regeneratedContent, setRegeneratedContent] = useState<Record<number, string>>({});
+    const [regeneratedTitles, setRegeneratedTitles] = useState<{ [key: number]: string }>({});
+    const [regeneratedContents, setRegeneratedContents] = useState<{ [key: number]: string }>({});
+    const [popoverPrompt, setPopoverPrompt] = useState<string>("");
+
+
 
     const scrollToSection = (sectionId: string) => {
         sectionRefs.current[sectionId]?.scrollIntoView({ behavior: 'smooth' });
@@ -35,18 +44,34 @@ const RightComponent: React.FC<RightComponentProps> = ({ formSubmitted, gist, su
         }
     };
 
-    const handleRegenerate = async (index: number, prompt: string) => {
+    const handleRegenerate = async (index: number, prev_title: string, prev_content: string) => {
         setIsRegenerating(true);
         try {
-            const response: GroqResponse = await fetchGroqData(videoUrl);
-            const newContent = response.choices[0]?.message?.content || '';
-            setRegeneratedContent(prev => ({ ...prev, [index]: newContent }));
+            // const response = await fetchGroqData(videoUrl, "regenerate", prev_title, prev_content, popoverPrompt);
+            const response = { "new_title": "mock title", "new_content": "mock content" }
+            console.log("HEYYYY", response);
+
+            setRegeneratedTitles(prev => ({
+                ...prev,
+                [index]: response.new_title
+            }));
+            setRegeneratedContents(prev => ({
+                ...prev,
+                [index]: response.new_content
+            }));
+
+
         } catch (error) {
-            console.error('Error regenerating content:', error);
+            console.error("Error regenerating content:", error);
         } finally {
             setIsRegenerating(false);
         }
     };
+
+    useEffect(() => {
+        console.log("Updated regenerated titles:", regeneratedTitles);
+        console.log("Updated regenerated contents:", regeneratedContents);
+    }, [regeneratedContents, regeneratedTitles])
 
 
     return (
@@ -126,13 +151,17 @@ const RightComponent: React.FC<RightComponentProps> = ({ formSubmitted, gist, su
                             <div className="text-osm-black w-full space-y-8">
                                 {Array.from({ length: contentLength }).map((_, index) => (
                                     <RegeneratePopover
-                                        key={index}
+                                        key={`${index}`}
                                         index={index}
-                                        content={regeneratedContent[index] || summary.summary}
-                                        tableOfContentsItem={seoAndTableOfContents.tableOfContents[index]}
+                                        originalContent={summary.summary}
+                                        originalTitle={seoAndTableOfContents.tableOfContents[index]}
+                                        regeneratedContent={regeneratedContents[index]}
+                                        regeneratedTitle={regeneratedTitles[index]}
                                         setRef={setRef}
                                         onRegenerate={handleRegenerate}
                                         isRegenerating={isRegenerating}
+                                        popoverPrompt={popoverPrompt}
+                                        setPopoverPrompt={setPopoverPrompt}
                                     />
                                 ))}
                             </div>

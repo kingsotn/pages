@@ -102,7 +102,7 @@ const LeftComponent: React.FC<LeftComponentProps> = ({ setFormSubmitted, setGist
             // real
             // const gistData = await fetchTwelveLabsData(videoUrl, 'gist');
             // const summaryData = await fetchTwelveLabsData(videoUrl, 'summary', 0.5, 'summary');
-            // const seoAndTocData = await fetchGroqData(videoUrl);
+            // const seoAndTocData = await fetchGroqData(videoUrl, 'generate');
 
             // setGist(transformGistData(gistData as TwelveLabsGistResponse));
             // setSummary(transformSummaryData(summaryData as TwelveLabsSummaryResponse));

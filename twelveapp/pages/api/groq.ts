@@ -15,23 +15,37 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { videoUrl } = req.body;
+  const { videoUrl, action, prev_title, prev_content, popoverPrompt } = req.body; //action: 'regenerate' | 'generate'
 
   if (videoUrl !== "https://www.youtube.com/watch?v=Nsx5RDVKZSk") {
     return res.status(400).json({ error: "Can't use this video... yet" });
   }
 
-  const temperature: number = 0.5
-  const system_prompt = `Video Description:
-The video features a comprehensive discussion led by various prominent figures from Y Combinator, including Michael Seibel, Diana, Gustav, Tom, Harj, and Pete, focusing on the crucial topic of launching startup products. The content emphasizes the common fears and misconceptions that founders have about launching their products, particularly the false belief that a launch must be perfect and that a failed launch will have dire consequences. \nThe speakers stress the importance of launching early and often, arguing that the real value lies in the learning and feedback gained from each launch. They discuss how many founders, especially those with experience in large companies like Apple and Google, mistakenly believe that they need to spend extensive time and resources polishing their products before launching. The video debunks this myth, highlighting that for startups, an iterative approach to launching is far more effective, allowing them to learn from real-world feedback and make necessary improvements.\nMichael Seibel and Diana specifically address the dangers of \"pop culture knowledge\" and the unrealistic expectations it sets for startup founders. They illustrate that most successful companies had multiple launches before gaining traction, using examples like Airbnb, which launched three times before achieving success. The speakers also touch on the psychological barriers that prevent founders from launching, such as the fear of failure and rejection. They advocate for a mindset shift where learning and iteration are prioritized over perfection.\nThe video also covers practical advice on handling the aftermath of a launch, especially if it does not go as planned. Founders are encouraged to diagnose problems analytically, tweak their approaches, and re-launch rather than considering an initial failure as a definitive setback. The importance of targeting the right customers and learning to love rejection is also discussed, as these experiences help refine the product and business approach.\nTowards the end, the video provides motivational insights, encouraging founders to embrace the discomfort of feedback and criticism as part of the growth process. It concludes with a call to action, inviting viewers to explore Y Combinator's resources and support for launching their products and iterating based on customer feedback.\nOverall, the video serves as an informative and motivational guide for startup founders, emphasizing the importance of launching early, learning from each experience, and continuously improving their products to achieve success.`
-  const user_prompt = `
-    Based on this video description, I want to generate JSON Object of 5 keywords for Search Engine Optimization, and 5 for table of contents.
+  // normal generate
+  let system_prompt = `Video Description: The video features a comprehensive discussion led by various prominent figures from Y Combinator, including Michael Seibel, Diana, Gustav, Tom, Harj, and Pete, focusing on the crucial topic of launching startup products. The content emphasizes the common fears and misconceptions that founders have about launching their products, particularly the false belief that a launch must be perfect and that a failed launch will have dire consequences. \nThe speakers stress the importance of launching early and often, arguing that the real value lies in the learning and feedback gained from each launch. They discuss how many founders, especially those with experience in large companies like Apple and Google, mistakenly believe that they need to spend extensive time and resources polishing their products before launching. The video debunks this myth, highlighting that for startups, an iterative approach to launching is far more effective, allowing them to learn from real-world feedback and make necessary improvements.\nMichael Seibel and Diana specifically address the dangers of \"pop culture knowledge\" and the unrealistic expectations it sets for startup founders. They illustrate that most successful companies had multiple launches before gaining traction, using examples like Airbnb, which launched three times before achieving success. The speakers also touch on the psychological barriers that prevent founders from launching, such as the fear of failure and rejection. They advocate for a mindset shift where learning and iteration are prioritized over perfection.\nThe video also covers practical advice on handling the aftermath of a launch, especially if it does not go as planned. Founders are encouraged to diagnose problems analytically, tweak their approaches, and re-launch rather than considering an initial failure as a definitive setback. The importance of targeting the right customers and learning to love rejection is also discussed, as these experiences help refine the product and business approach.\nTowards the end, the video provides motivational insights, encouraging founders to embrace the discomfort of feedback and criticism as part of the growth process. It concludes with a call to action, inviting viewers to explore Y Combinator's resources and support for launching their products and iterating based on customer feedback.\nOverall, the video serves as an informative and motivational guide for startup founders, emphasizing the importance of launching early, learning from each experience, and continuously improving their products to achieve success.`
+  let temperature: number = 0.5
+  let user_prompt = `Based on this video description, I want to generate JSON Object of 5 keywords for Search Engine Optimization, and 5 for table of contents.
     An example JSON output would be:
     {
     "seo": ["eBike", "Bike", "Bicycle", "Commuters", "Trees"],
     "tableOfContents" : ["Introduction", "Getting Started", "Basic Concepts", "Advanced Techniques", "Practical Applications"],
     }
+  `;
+  let section_to_change = ''
+
+  // if it is regenerate
+  if (action === 'regenerate') {
+    temperature = 0.7
+    system_prompt = `This is the content separated into a prev_title and a prev_content. The prev_title is a subheading within the entire article, and the prev_content is the content below that subheading.
+    {"prev_title": "${prev_title}", "prev_content": "${prev_content}"}
     `;
+    user_prompt = `I want to regenerate the content given the following prompt: ${popoverPrompt}. \n\n You are to generate a JSON response and MUST adhere to the prompt. Here is an example response:
+    {
+    "new_title": "Qualities of Great Drummers",
+    "new_content" : "Being a good drummer is all about having a great sense of rhythm and being able to keep a steady beat. It's like being the heartbeat of the band - you set the pace and keep everyone in sync. A good drummer also knows when to take the lead and when to step back and let others shine. It's not just about playing fast or doing fancy fills, but about serving the song and making the whole band sound their best.",
+    }`
+  }
+
 
   try {
     const completion = await groq.chat.completions.create({

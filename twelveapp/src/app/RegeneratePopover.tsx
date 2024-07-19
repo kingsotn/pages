@@ -3,28 +3,56 @@ import { Popover, PopoverTrigger, PopoverContent, Button, Textarea } from "@next
 
 interface RegeneratePopoverProps {
     index: number;
-    content: string;
-    tableOfContentsItem: string;
+    originalContent: string;
+    originalTitle: string;
+    regeneratedContent?: string;
+    regeneratedTitle?: string;
     setRef: (el: HTMLDivElement | null, key: string) => void;
-    onRegenerate: (index: number, prompt: string) => void;
+    onRegenerate: (index: number, prev_title: string, prev_content: string) => Promise<void>;
     isRegenerating: boolean;
+    popoverPrompt: string;
+    setPopoverPrompt: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const RegeneratePopover: React.FC<RegeneratePopoverProps> = ({
     index,
-    content,
-    tableOfContentsItem,
+    originalContent,
+    originalTitle,
+    regeneratedContent,
+    regeneratedTitle,
     setRef,
     onRegenerate,
-    isRegenerating
+    isRegenerating,
+    popoverPrompt,
+    setPopoverPrompt
 }) => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
-    const [prompt, setPrompt] = useState<string>("");
     const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(true);
 
+    const displayTitle = regeneratedTitle ?? originalTitle;
+    const displayContent = regeneratedContent ?? originalContent;
+
     useEffect(() => {
-        setIsButtonDisabled(prompt.trim().length === 0 || isRegenerating);
-    }, [prompt, isRegenerating]);
+        setIsButtonDisabled(popoverPrompt.trim().length === 0 || isRegenerating);
+    }, [popoverPrompt, isRegenerating]);
+
+    useEffect(() => {
+        console.log(`RegeneratePopover ${index} received new props:`, {
+            regeneratedContent,
+            regeneratedTitle
+        });
+    }, [index, regeneratedContent, regeneratedTitle]);
+
+    const handleRegenerateClick = async () => {
+        try {
+            await onRegenerate(index, displayTitle, displayContent);
+            setIsOpen(false);
+            setPopoverPrompt("");
+        } catch (error) {
+            console.error("Error in regeneration:", error);
+            // Handle error (e.g., show an error message)
+        }
+    };
 
     return (
         <Popover
@@ -34,11 +62,11 @@ const RegeneratePopover: React.FC<RegeneratePopoverProps> = ({
         >
             <PopoverTrigger>
                 <div
-                    ref={(el) => setRef(el, tableOfContentsItem)}
+                    ref={(el) => setRef(el, displayTitle)}
                     className="w-full min-w-[500.66px] p-4 rounded-xl hover:scale-[100.5%] transition-all cursor-pointer relative text-osm-black"
                 >
-                    <h3 className="text-xl font-bold mb-2">{tableOfContentsItem}</h3>
-                    <p>{content}</p>
+                    <h3 className="text-xl font-bold mb-2">{displayTitle}</h3>
+                    <p>{displayContent}</p>
                 </div>
             </PopoverTrigger>
             <PopoverContent className="w-[300px]">
@@ -47,9 +75,9 @@ const RegeneratePopover: React.FC<RegeneratePopoverProps> = ({
                         <div className="mt-2 flex flex-col gap-2 w-full text-osm-black">
                             <Textarea
                                 placeholder="How would you like to adjust this section?"
-                                value={prompt}
+                                value={popoverPrompt}
                                 radius='sm'
-                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPrompt(e.target.value)}
+                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPopoverPrompt(e.target.value)}
                                 disabled={isRegenerating}
                             />
                             <Button
@@ -57,10 +85,7 @@ const RegeneratePopover: React.FC<RegeneratePopoverProps> = ({
                                 radius='sm'
                                 isDisabled={isButtonDisabled}
                                 isLoading={isRegenerating}
-                                onClick={() => {
-                                    onRegenerate(index, prompt);
-                                    setPrompt("");
-                                }}
+                                onClick={handleRegenerateClick}
                             >
                                 <div className="text-osm-black">
                                     {isRegenerating ? "" : "Regenerate ⌘+↵"}
