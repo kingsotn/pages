@@ -66,9 +66,11 @@ type LeftComponentProps = {
     setVideoUrl: React.Dispatch<React.SetStateAction<string>>
     setSectionCount: React.Dispatch<React.SetStateAction<number>>
     sectionCount: number
+    requirements: string
+    setRequirements: React.Dispatch<React.SetStateAction<string>>
 };
 
-const LeftComponent: React.FC<LeftComponentProps> = ({ setFormSubmitted, setGist, setSummary, setSeoAndTableOfContents, videoUrl, setVideoUrl, setSectionCount, sectionCount }) => {
+const LeftComponent: React.FC<LeftComponentProps> = ({ setFormSubmitted, setGist, setSummary, setSeoAndTableOfContents, videoUrl, setVideoUrl, setSectionCount, sectionCount, requirements, setRequirements }) => {
     const [groupSelected, setGroupSelected] = useState<string[]>([]);
     const [goalSelected, setGoalSelected] = useState<string[]>([]);
     const [additionalInfo, setAdditionalInfo] = useState<string>('');
@@ -79,6 +81,10 @@ const LeftComponent: React.FC<LeftComponentProps> = ({ setFormSubmitted, setGist
         const isFormFilled = videoUrl !== '' && goalSelected.length > 0 && groupSelected.length > 0 && videoUrl === yc_video;
         setFormFilled(isFormFilled);
     }, [videoUrl, goalSelected, groupSelected]);
+
+    useEffect(() => {
+        setRequirements(`Here are additional info for the content generation: ${additionalInfo} Here are some goals: ${goalSelected.join(',')} Here are some info about the video: ${groupSelected.join(',')}`);
+    }, [additionalInfo, goalSelected, groupSelected]);
 
     const handleKeyDown = (e: React.KeyboardEvent<any>, field: string) => {
         if (e.key !== 'Tab') return
@@ -104,28 +110,25 @@ const LeftComponent: React.FC<LeftComponentProps> = ({ setFormSubmitted, setGist
             // real
             // const gistData = await fetchTwelveLabsData(videoUrl, 'gist');
             // const summaryData = await fetchTwelveLabsData(videoUrl, 'summary', 0.5, 'summary');
-            // const seoAndTocData = await fetchGroqData(videoUrl, 'generate');
+            const seoAndTocData = await fetchGroqData(videoUrl, 'generate', undefined, undefined, undefined, requirements);
 
             // setGist(transformGistData(gistData as TwelveLabsGistResponse));
             // setSummary(transformSummaryData(summaryData as TwelveLabsSummaryResponse));
-            // setSeoAndTableOfContents(transformSeoAndTocData(seoAndTocData));
-
-            // call groq api here to split summary into content
-            const summaryData = await fetchGroqData(videoUrl, "generate", sectionCount)
+            setSeoAndTableOfContents(transformSeoAndTocData(seoAndTocData));
 
             // mock
+            setSummary({ id: "66959fe83ca9a432304de1c8", summary: "The video features a comprehensive discussion led by various prominent figures from Y Combinator, including Michael Seibel, Diana, Gustav, Tom, Harj, and Pete, focusing on the crucial topic of launching startup products. The content emphasizes the common fears and misconceptions that founders have about launching their products, particularly the false belief that a launch must be perfect and that a failed launch will have dire consequences. \nThe speakers stress the importance of launching early and often, arguing that the real value lies in the learning and feedback gained from each launch. They discuss how many founders, especially those with experience in large companies like Apple and Google, mistakenly believe that they need to spend extensive time and resources polishing their products before launching. The video debunks this myth, highlighting that for startups, an iterative approach to launching is far more effective, allowing them to learn from real-world feedback and make necessary improvements.\nMichael Seibel and Diana specifically address the dangers of \"pop culture knowledge\" and the unrealistic expectations it sets for startup founders. They illustrate that most successful companies had multiple launches before gaining traction, using examples like Airbnb, which launched three times before achieving success. The speakers also touch on the psychological barriers that prevent founders from launching, such as the fear of failure and rejection. They advocate for a mindset shift where learning and iteration are prioritized over perfection.\nThe video also covers practical advice on handling the aftermath of a launch, especially if it does not go as planned. Founders are encouraged to diagnose problems analytically, tweak their approaches, and re-launch rather than considering an initial failure as a definitive setback. The importance of targeting the right customers and learning to love rejection is also discussed, as these experiences help refine the product and business approach.\nTowards the end, the video provides motivational insights, encouraging founders to embrace the discomfort of feedback and criticism as part of the growth process. It concludes with a call to action, inviting viewers to explore Y Combinator's resources and support for launching their products and iterating based on customer feedback.\nOverall, the video serves as an informative and motivational guide for startup founders, emphasizing the importance of launching early, learning from each experience, and continuously improving their products to achieve success.", }); //mock
             setGist({
                 id: "66959fe83ca9a432304de1c8",
                 title: "Startups And Title Mock",
                 topics: ["Startups", "Startups1", "startups3"],
                 hashtags: ["#1", "#2", "#3"],
             });
-            setSummary({ id: "66959fe83ca9a432304de1c8", summary: "The video features a comprehensive discussion led by various prominent figures from Y Combinator, including Michael Seibel, Diana, Gustav, Tom, Harj, and Pete, focusing on the crucial topic of launching startup products. The content emphasizes the common fears and misconceptions that founders have about launching their products, particularly the false belief that a launch must be perfect and that a failed launch will have dire consequences. \nThe speakers stress the importance of launching early and often, arguing that the real value lies in the learning and feedback gained from each launch. They discuss how many founders, especially those with experience in large companies like Apple and Google, mistakenly believe that they need to spend extensive time and resources polishing their products before launching. The video debunks this myth, highlighting that for startups, an iterative approach to launching is far more effective, allowing them to learn from real-world feedback and make necessary improvements.\nMichael Seibel and Diana specifically address the dangers of \"pop culture knowledge\" and the unrealistic expectations it sets for startup founders. They illustrate that most successful companies had multiple launches before gaining traction, using examples like Airbnb, which launched three times before achieving success. The speakers also touch on the psychological barriers that prevent founders from launching, such as the fear of failure and rejection. They advocate for a mindset shift where learning and iteration are prioritized over perfection.\nThe video also covers practical advice on handling the aftermath of a launch, especially if it does not go as planned. Founders are encouraged to diagnose problems analytically, tweak their approaches, and re-launch rather than considering an initial failure as a definitive setback. The importance of targeting the right customers and learning to love rejection is also discussed, as these experiences help refine the product and business approach.\nTowards the end, the video provides motivational insights, encouraging founders to embrace the discomfort of feedback and criticism as part of the growth process. It concludes with a call to action, inviting viewers to explore Y Combinator's resources and support for launching their products and iterating based on customer feedback.\nOverall, the video serves as an informative and motivational guide for startup founders, emphasizing the importance of launching early, learning from each experience, and continuously improving their products to achieve success.", }); //mock
-            setSeoAndTableOfContents({
-                "seo": ["eBike", "Bike", "Bicycle", "Commuters", "Trees"],
-                "tableOfContents": ["Introduction", "Getting Started", "Basic Concepts", "Advanced Techniques", "Practical Applications"],
-                "sectionContent": ["Being a good drummer is all about having a great sense of rhythm and being able to keep a steady beat. It's like being the heartbeat of the band - you set the pace and keep everyone in sync. A good drummer also knows when to take the lead and when to step back and let others shine.", "To be a successful drummer, you need to have dedication and a love for your craft. It takes a lot of practice to develop your skills, but if you stick with it and keep learning, you'll keep getting better and better.", "o why should you be excited about drumming? Because it's an incredibly fun and rewarding way to express yourself and connect with others through music. When you're grooving behind the kit, you get to be the driving force that makes people want to dance and sing along.", "Buddy Rich: Known for his incredible speed and technical skill, Rich is considered one of the greatest jazz drummers ever. Art Blakey: Blakey's powerful, polyrhythmic style helped define the sound of hard bop. Gene Krupa: Krupa was a pioneer of drum solos and a major influence on modern drumming.", "Remember, the exact setup can vary based on personal preference and playing style. Experiment to find what works best for you, and don't be afraid to make adjustments as you develop your skills. With your drum kit assembled, you're ready to start your drumming journey!"],
-            });
+            // setSeoAndTableOfContents({
+            //     "seo": ["eBike", "Bike", "Bicycle", "Commuters", "Trees"],
+            //     "tableOfContents": ["Introduction", "Getting Started", "Basic Concepts", "Advanced Techniques", "Practical Applications"],
+            //     "sectionContent": ["Being a good drummer is all about having a great sense of rhythm and being able to keep a steady beat. It's like being the heartbeat of the band - you set the pace and keep everyone in sync. A good drummer also knows when to take the lead and when to step back and let others shine.", "To be a successful drummer, you need to have dedication and a love for your craft. It takes a lot of practice to develop your skills, but if you stick with it and keep learning, you'll keep getting better and better.", "o why should you be excited about drumming? Because it's an incredibly fun and rewarding way to express yourself and connect with others through music. When you're grooving behind the kit, you get to be the driving force that makes people want to dance and sing along.", "Buddy Rich: Known for his incredible speed and technical skill, Rich is considered one of the greatest jazz drummers ever. Art Blakey: Blakey's powerful, polyrhythmic style helped define the sound of hard bop. Gene Krupa: Krupa was a pioneer of drum solos and a major influence on modern drumming.", "Remember, the exact setup can vary based on personal preference and playing style. Experiment to find what works best for you, and don't be afraid to make adjustments as you develop your skills. With your drum kit assembled, you're ready to start your drumming journey!"],
+            // });
         } catch (error) {
             console.error('error fetching data:', error);
         }

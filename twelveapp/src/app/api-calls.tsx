@@ -87,13 +87,13 @@ export type TitleAndContent = {
     content: string
 }
 
-export async function fetchGroqData(videoUrl: string, action: 'regenerate' | 'generate', section_count?: number, prev_title?: string, prev_content?: string, popoverPrompt?: string): Promise<any> {
+export async function fetchGroqData(videoUrl: string, action: 'regenerate' | 'generate', section_count?: number, prev_title?: string, prev_content?: string, popoverPrompt?: string, requirements?: string): Promise<any> {
     const response = await fetch('/api/groq', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ videoUrl, action, prev_title, prev_content, popoverPrompt, section_count }),
+        body: JSON.stringify({ videoUrl, action, prev_title, prev_content, popoverPrompt, section_count, requirements }),
     });
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
     return await response.json();
