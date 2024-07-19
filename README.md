@@ -1,3 +1,4 @@
+![](images/banner.png)
 # What I will be building:
 A platform that takes video as an input and produces bite-sized blogs for [SEO](https://en.wikipedia.org/wiki/Search_engine_optimization) optimization.
 
