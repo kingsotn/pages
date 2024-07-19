@@ -21,8 +21,11 @@ export default function Home() {
   const [seoAndTableOfContents, setSeoAndTableOfContents] = useState<SeoAndTableOfContents>({
     seo: [],
     tableOfContents: [],
+    sectionContent: []
   });
   const [videoUrl, setVideoUrl] = useState<string>("");
+  const [sectionCount, setSectionCount] = useState<number>(5);
+
 
   useEffect(() => {
     console.log(gist)
@@ -32,11 +35,11 @@ export default function Home() {
     <NextUIProvider>
       <main className="min-h-screen flex flex-col md:flex-row">
         <div className="w-full md:w-[670px] min-w-[670px] flex-shrink-0 flex flex-col border-b-1 md:border-b-0 md:border-r-1 border-gray-300 bg-gray-50 md:fixed md:left-0 md:top-0 md:bottom-0">
-          <LeftComponent setFormSubmitted={setFormSubmitted} setGist={setGist} setSummary={setSummary} setSeoAndTableOfContents={setSeoAndTableOfContents} videoUrl={videoUrl} setVideoUrl={setVideoUrl}/>
+          <LeftComponent setFormSubmitted={setFormSubmitted} setGist={setGist} setSummary={setSummary} setSeoAndTableOfContents={setSeoAndTableOfContents} videoUrl={videoUrl} setVideoUrl={setVideoUrl} setSectionCount={setSectionCount} sectionCount={sectionCount}/>
         </div>
         <div className="w-full md:w-[calc(100%-670px)] md:ml-[670px] overflow-y-auto overflow-x-hidden">
           <div className="min-w-[670px] md:min-w-0">
-            <RightComponent formSubmitted={formSubmitted} gist={gist} summary={summary} seoAndTableOfContents={seoAndTableOfContents} videoUrl={videoUrl} />
+            <RightComponent formSubmitted={formSubmitted} gist={gist} summary={summary} seoAndTableOfContents={seoAndTableOfContents} videoUrl={videoUrl} sectionCount={sectionCount} />
           </div>
         </div>
       </main>

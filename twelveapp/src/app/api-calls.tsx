@@ -20,6 +20,7 @@ export type SummaryState = {
 export type SeoAndTableOfContentsState = {
     seo: string[];
     tableOfContents: string[];
+    sectionContent: string[];
 }
 
 // Types for API responses
@@ -86,13 +87,13 @@ export type TitleAndContent = {
     content: string
 }
 
-export async function fetchGroqData(videoUrl: string, action: 'regenerate' | 'generate', prev_title: string, prev_content: string, popoverPrompt: string): Promise<any> {
+export async function fetchGroqData(videoUrl: string, action: 'regenerate' | 'generate', section_count?: number, prev_title?: string, prev_content?: string, popoverPrompt?: string): Promise<any> {
     const response = await fetch('/api/groq', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ videoUrl, action, prev_title, prev_content, popoverPrompt }),
+        body: JSON.stringify({ videoUrl, action, prev_title, prev_content, popoverPrompt, section_count }),
     });
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
     return await response.json();
@@ -122,6 +123,7 @@ export function transformSeoAndTocData(data: GroqResponse): SeoAndTableOfContent
 
     return {
         seo: content.SEOKeywords || [],
-        tableOfContents: content.TableOfContents || []
+        tableOfContents: content.TableOfContents || [],
+        sectionContent: content.sectionContent || []
     };
 }

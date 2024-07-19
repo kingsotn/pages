@@ -16,6 +16,7 @@ type RightComponentProps = {
     summary: Summary
     seoAndTableOfContents: SeoAndTableOfContents
     videoUrl: string
+    sectionCount: number
 };
 
 export type RegeneratedData = {
@@ -23,15 +24,13 @@ export type RegeneratedData = {
     new_content: string;
 };
 
-const RightComponent: React.FC<RightComponentProps> = ({ formSubmitted, gist, summary, seoAndTableOfContents, videoUrl }) => {
+const RightComponent: React.FC<RightComponentProps> = ({ formSubmitted, gist, summary, seoAndTableOfContents, videoUrl, sectionCount }) => {
     const [isLoading, setIsLoading] = useState(true);
-    const [contentLength, setContentLength] = useState(5);
     const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
     const [isRegenerating, setIsRegenerating] = useState(false);
     const [regeneratedTitles, setRegeneratedTitles] = useState<{ [key: number]: string }>({});
     const [regeneratedContents, setRegeneratedContents] = useState<{ [key: number]: string }>({});
     const [popoverPrompt, setPopoverPrompt] = useState<string>("");
-
 
 
     const scrollToSection = (sectionId: string) => {
@@ -49,7 +48,6 @@ const RightComponent: React.FC<RightComponentProps> = ({ formSubmitted, gist, su
         try {
             // const response = await fetchGroqData(videoUrl, "regenerate", prev_title, prev_content, popoverPrompt);
             const response = { "new_title": "mock title", "new_content": "mock content" }
-            console.log("HEYYYY", response);
 
             setRegeneratedTitles(prev => ({
                 ...prev,
@@ -59,7 +57,6 @@ const RightComponent: React.FC<RightComponentProps> = ({ formSubmitted, gist, su
                 ...prev,
                 [index]: response.new_content
             }));
-
 
         } catch (error) {
             console.error("Error regenerating content:", error);
@@ -149,11 +146,11 @@ const RightComponent: React.FC<RightComponentProps> = ({ formSubmitted, gist, su
                     {formSubmitted ? (
                         <Skeleton className="rounded w-full min-w-[500.66px]" isLoaded={summary.summary.length > 0}>
                             <div className="text-osm-black w-full space-y-8">
-                                {Array.from({ length: contentLength }).map((_, index) => (
+                                {Array.from({ length: sectionCount }).map((_, index) => (
                                     <RegeneratePopover
                                         key={`${index}`}
                                         index={index}
-                                        originalContent={summary.summary}
+                                        originalContent={seoAndTableOfContents.sectionContent[index]}
                                         originalTitle={seoAndTableOfContents.tableOfContents[index]}
                                         regeneratedContent={regeneratedContents[index]}
                                         regeneratedTitle={regeneratedTitles[index]}
@@ -168,7 +165,7 @@ const RightComponent: React.FC<RightComponentProps> = ({ formSubmitted, gist, su
                         </Skeleton>
                     ) : (
                         <div className="flex flex-col space-y-4 w-full">
-                            {Array.from({ length: contentLength }).map((_, index) => (
+                            {Array.from({ length: sectionCount }).map((_, index) => (
                                 <Skeleton key={index} className="h-32 rounded w-full min-w-[390px]" />
                             ))}
                         </div>
@@ -176,10 +173,10 @@ const RightComponent: React.FC<RightComponentProps> = ({ formSubmitted, gist, su
                 </div>
                 <div className="hidden custom:flex flex-col min-h-[1450px]">
                     <TableOfContents
-                        items={seoAndTableOfContents.tableOfContents.slice(0, contentLength)}
+                        items={seoAndTableOfContents.tableOfContents.slice(0, sectionCount)}
                         onItemClick={scrollToSection}
                         isLoaded={formSubmitted && summary.summary.length > 0}
-                        skeletonCount={contentLength}
+                        skeletonCount={sectionCount}
                         className="hidden custom:block ml-10 mt-8 min-w-[150px] sticky top-10"
                     />
                 </div>
