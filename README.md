@@ -1,27 +1,10 @@
-```mermaid
----
-title: Technically Feasible Flowchart
----
-    graph LR
-    A["'Upload' Video (Mock)"] --> B[Skip Index Generation]
-    B --> C[Perform Actions]
-    C -->|twelvelabs/gist| D[Gist Analysis]
-    C -->|twelvelabs/summarize| E[Video Summary]
-    D --> F[Groq API Call]
-    E --> F
-    F --> G[Output to UI]
-    
-    style A fill:#4CAF50,stroke:#333,stroke-width:2px,color:white
-    style B fill:#9E9E9E,stroke:#333,stroke-width:2px,color:white
-    style C fill:#FF9800,stroke:#333,stroke-width:2px,color:white
-    style D fill:#03A9F4,stroke:#333,stroke-width:2px,color:white
-    style E fill:#00BCD4,stroke:#333,stroke-width:2px,color:white
-    style F fill:#9C27B0,stroke:#333,stroke-width:2px,color:white
-    style G fill:#E91E63,stroke:#333,stroke-width:2px,color:white
-```
-
 # What I will be building:
 A platform that takes video as an input and produces bite-sized blogs for [SEO](https://en.wikipedia.org/wiki/Search_engine_optimization) optimization.
+
+The app currently:
+- Accepts a mock YouTube video input, and allows users to tune generation
+- Generates a banner, title, text content, and table of contents via `/twelvelabs` and `/groq` apis
+- Allows users to edit portions of text via custom prompting
 
 ## Getting Started
 
