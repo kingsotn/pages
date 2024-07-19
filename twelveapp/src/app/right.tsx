@@ -45,16 +45,17 @@ const RightComponent: React.FC<RightComponentProps> = ({ formSubmitted, gist, su
     const handleRegenerate = async (index: number, prev_title: string, prev_content: string) => {
         setIsRegenerating(true);
         try {
-            // const response = await fetchGroqData(videoUrl, "regenerate", prev_title, prev_content, popoverPrompt);
-            const response = { "new_title": "mock title", "new_content": "mock content" }
+            const response = await fetchGroqData(videoUrl, "regenerate", undefined, prev_title, prev_content, popoverPrompt, undefined);
+            const responseJSON = JSON.parse(response);
+            // const response = { "new_title": "mock title", "new_content": "mock content" }
 
             setRegeneratedTitles(prev => ({
                 ...prev,
-                [index]: response.new_title
+                [index]: responseJSON.new_title
             }));
             setRegeneratedContents(prev => ({
                 ...prev,
-                [index]: response.new_content
+                [index]: responseJSON.new_content
             }));
 
         } catch (error) {

@@ -110,7 +110,7 @@ const LeftComponent: React.FC<LeftComponentProps> = ({ setFormSubmitted, setGist
             // real
             // const gistData = await fetchTwelveLabsData(videoUrl, 'gist');
             // const summaryData = await fetchTwelveLabsData(videoUrl, 'summary', 0.5, 'summary');
-            const response: string = await fetchGroqData(videoUrl, 'generate', undefined, undefined, undefined, requirements);
+            const response: string = await fetchGroqData(videoUrl, 'generate', sectionCount, undefined, undefined, undefined, requirements);
             const seoAndTocData: SeoAndTableOfContents = JSON.parse(response);
             console.log("type\n\n", typeof (seoAndTocData))
             console.log("HEREEEE", seoAndTocData)
