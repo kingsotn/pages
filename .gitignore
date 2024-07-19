@@ -2,3 +2,4 @@ node_modules
 shit-example.tsx
 .env*
 
+.vercel

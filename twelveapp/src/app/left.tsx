@@ -251,8 +251,6 @@ const LeftComponent: React.FC<LeftComponentProps> = ({ setFormSubmitted, setGist
                                 <div className="align-bottom"><TabUnpressed /></div>
                             )}
                         </div>
-
-
                     }
                     placeholder="e.g. make sure to include the keywords plants, nature, health"
                     variant="bordered"
