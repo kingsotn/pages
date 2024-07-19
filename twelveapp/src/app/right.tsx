@@ -113,9 +113,10 @@ const RightComponent: React.FC<RightComponentProps> = ({ formSubmitted, gist, su
                                 <Skeleton className="h-12 rounded w-1/2 min-w-[390px]" isLoaded={gist.title.length > 0} disableAnimation>
                                     <h2 className="h-10 font-serif text-5xl font-medium w-full text-osm-black min-w-[390px] text-nowrap">
                                         {(() => {
+                                            // !! this is a temp fix
                                             const title = gist.title.includes(":") ? gist.title.split(":")[1].trim() : gist.title;
                                             const words = title.split(" ");
-                                            return words.length > 5 ? words.slice(-5).join(" ") : title;
+                                            return words.length > 3 ? words.slice(-3).join(" ") : title;
                                         })()}
                                     </h2>
 
