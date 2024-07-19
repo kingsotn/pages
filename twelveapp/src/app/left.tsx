@@ -76,6 +76,7 @@ const LeftComponent: React.FC<LeftComponentProps> = ({ setFormSubmitted, setGist
     const [additionalInfo, setAdditionalInfo] = useState<string>('');
     const [formFilled, setFormFilled] = useState<boolean>(false);
     const [isTabPressed, setIsTabPressed] = useState<boolean>(false)
+    const [disableButton, setDisableButton] = useState<boolean>(false)
 
     useEffect(() => {
         const isFormFilled = videoUrl !== '' && goalSelected.length > 0 && groupSelected.length > 0 && videoUrl === yc_video;
@@ -106,6 +107,8 @@ const LeftComponent: React.FC<LeftComponentProps> = ({ setFormSubmitted, setGist
 
     const handleGenerateClick = async () => {
         setFormSubmitted(true);
+        setDisableButton(true);
+        
         try {
             // real
             const gistData = await fetchTwelveLabsData(videoUrl, 'gist');
@@ -265,7 +268,7 @@ const LeftComponent: React.FC<LeftComponentProps> = ({ setFormSubmitted, setGist
                             </svg>
                         }
                         onClick={handleGenerateClick}
-                        isDisabled={!formFilled}
+                        isDisabled={!formFilled || disableButton}
                     >
                         Generate
                     </Button>
