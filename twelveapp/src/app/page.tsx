@@ -24,7 +24,7 @@ export default function Home() {
     sectionContent: []
   });
   const [videoUrl, setVideoUrl] = useState<string>("");
-  const [sectionCount, setSectionCount] = useState<number>(2);
+  const [sectionCount, setSectionCount] = useState<number>(5);
   const [requirements, setRequirements] = useState<string>("");
 
 

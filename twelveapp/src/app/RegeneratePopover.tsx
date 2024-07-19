@@ -63,9 +63,9 @@ const RegeneratePopover: React.FC<RegeneratePopoverProps> = ({
             <PopoverTrigger>
                 <div
                     ref={(el) => setRef(el, displayTitle)}
-                    className="w-full min-w-[500.66px] p-4 rounded-xl hover:scale-[100.5%] transition-all cursor-pointer relative text-osm-black"
+                    className="w-full min-w-[500.66px] rounded-xl hover:scale-[100.5%] transition-all cursor-pointer relative text-osm-black"
                 >
-                    <h3 className="text-xl font-bold mb-2">{displayTitle}</h3>
+                    <h3 className="text-xl font-bold">{displayTitle}</h3>
                     <p>{displayContent}</p>
                 </div>
             </PopoverTrigger>

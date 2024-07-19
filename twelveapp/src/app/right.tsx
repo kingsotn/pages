@@ -32,7 +32,6 @@ const RightComponent: React.FC<RightComponentProps> = ({ formSubmitted, gist, su
     const [regeneratedContents, setRegeneratedContents] = useState<{ [key: number]: string }>({});
     const [popoverPrompt, setPopoverPrompt] = useState<string>("");
 
-
     const scrollToSection = (sectionId: string) => {
         sectionRefs.current[sectionId]?.scrollIntoView({ behavior: 'smooth' });
     };
@@ -69,6 +68,11 @@ const RightComponent: React.FC<RightComponentProps> = ({ formSubmitted, gist, su
         console.log("Updated regenerated titles:", regeneratedTitles);
         console.log("Updated regenerated contents:", regeneratedContents);
     }, [regeneratedContents, regeneratedTitles])
+
+
+    useEffect(() => {
+        console.log("right \n\n", seoAndTableOfContents)
+    }, [seoAndTableOfContents])
 
 
     return (
