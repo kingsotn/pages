@@ -47,7 +47,7 @@ const YouTubeInput: React.FC<YouTubeInputProps> = React.memo(({
                 setIsTooltipOpen(true);
                 setTimeout(() => {
                     setIsTooltipOpen(false);
-                }, 2000);
+                }, 5000);
             } else {
                 setVideoInfo(null);
             }
@@ -74,7 +74,7 @@ const YouTubeInput: React.FC<YouTubeInputProps> = React.memo(({
             setIsTooltipOpen(true);
             setTimeout(() => {
                 setIsTooltipOpen(false);
-            }, 3000);
+            }, 5000);
         }
         handleKeyDown(e, "videoUrl");
     }, [handleKeyDown]);
