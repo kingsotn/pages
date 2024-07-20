@@ -31,9 +31,9 @@ This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-opti
 
 
 # Motivation
-The inspiration behind this idea comes from [perplexity pages](https://www.perplexity.ai/hub/blog/perplexity-pages). Answer engines are the new search engines, and their goals are to provide concise and accurate answers to user queries. As we rely more on this new technology, content should be structured to lead with value, and [Answer Engine Optimization (AEO)](https://blog.marketmuse.com/what-is-answer-engine-optimization/) should require an understanding of the user intent. Improving AEO requires engineering efforts in structured data, and user intent (I remember Aaravind Srinivas talking about how difficult this was on Lex's podcast) to increase its effectiveness. 
+The inspiration behind this idea comes from [perplexity pages](https://www.perplexity.ai/hub/blog/perplexity-pages). I firmly believe that Answer Engines are the new search engines. Answer engines are designed to to provide concise and accurate answers to user queries. As we rely more on this new technology, content should be structured to lead with value. That's where improving [Answer Engine Optimization (AEO)](https://blog.marketmuse.com/what-is-answer-engine-optimization/) comes in, requiring engineering efforts in structuring data, and user intent to increase its effectiveness (I remember Aaravind Srinivas talking about how difficult this was on Lex's podcast).
 
-Everyone is working on AEO. Take a look at [jotbot](https://myjotbot.com/blog). Although they have many blogs, trading off quantity for quality content is a temporary solution. If you believe in Answer Engines, then authority and expertise are important ranking factors. Content should be structured to lead and should reflect expertise. In parallel, Google already have ways in preventing the [gamifcation](https://blog.hubspot.com/marketing/diagnose-fix-google-penalty) of SEO, if you believe in Answer Engines and AI agents scraping are the future (which I do), then there must be some effort in creating quality and structured content.
+Everyone is working on AEO. Take a look at this AI startup [jotbot](https://myjotbot.com/blog). Although they have many blogs, they trade off quantity for quality. This is a temporary solution, but if you believe in Answer Engines, then the quality of good blog posts should be the most important factor and should reflect expertise. Similarly, Google already have ways in preventing the [gamifcation](https://blog.hubspot.com/marketing/diagnose-fix-google-penalty) of SEO, if you believe in Answer Engines and AI agents scraping are the future (which I do), then there must be some effort in creating quality and structured content.
 
 I took some [inspiration](https://playground.twelvelabs.io/indexes/65eff5b16dc02a0c6004a059/generate?v=65f0045566995fbd9fd64d7d&cache=true&mode=template&st=chapter&cp=Divide+the+chapters+step+by+step+introduced+in+this+video) behind the examples on the twelvelabs website for the UI. They have some APIs for video summarization so I will be trying those out.
 
@@ -106,7 +106,11 @@ Go ahead and play with it I find it a small but nice touch to the UX.
 ![](images/tab.gif)
 
 
-I still wasn't too happy with the UI of both the left and right components. Before you read what I disliked about the page, a good practice is to think what you would do to improve the UI of the page as a programmer (I'm by no means a designer), and then verify what you would change with what I would change. My design philosophy is that 1. I’d rather make a good website than make a comprehensive one, and 2. [minimal contrast](https://evanjconrad.com/posts/design-advice) was important.
+I wasn't satisfied with the UI of both the left and right components. Before reading my feedback, consider what you would improve as a programmer (I'm not a designer). Then, compare your ideas with mine.
+
+My design philosophy is:
+1. I’d rather make a good website than make a comprehensive one, and 
+2. [minimal contrast](https://evanjconrad.com/posts/design-advice) was important.
 
 Here were things that bothered me and so I changed:
 - cumulative shift of the warning message for the youtube link
@@ -157,7 +161,7 @@ This was bad... very bad.
 3. APIs were super slow, up to 1100+ms (10 seconds!) for each API call and response
 
 Solutions:
-1. Let's use groq for some additional llm generation with `llama-70b-8192`. It's free too.
+1. Let's use groq for some additional llm generation with `llama-70b-8192`. It's a free and fast solution.
 2. I don't want to deal with asynchronous generations and working on that UI/UX — it completely nullifies the one-click summarization promise I wanted my app to deliver. So for now I will just mock a single video for most of the backend generations, and then also force the user to only use my pre-indexed video for the generations. I'll still be calling the twelvelabs api, but if this were a real production app I wanted to deliver to users i'd either not use the twelvelabs api, or use the twelvelabs api but cache the summarizations (because endpoints like `/gist` and `/summarize` are already cached anyways).
 
 And so here I graph what was intended vs what's actually feasible.
@@ -263,13 +267,13 @@ When deployed on Vercel, we see that the files in the `/api` directory are prope
 
 ![](images/vercel2.png)
 
-I also occasionally ran into `504 server timeout error` which is due to some proxy timeouts on the server side for api calls for some of the `/generate` endpoints. I couldn't figure out what went wrong (might not even be my problem), so for most of the text generation I just opted back in for groq for most of my text generations.
+I also occasionally ran into `504 server timeout error` which is due to some proxy timeouts on the server side for api calls for some of the `twelvelabs/generate` endpoints. I couldn't figure out what went wrong (might not even be my problem), so for most of the text generation I just opted for groq for most of my text generations.
 
-For text generation groq also uses a JSON_MODE `response_format: { type: "json_object" }` in the api parameter call. This is super helpful in only receiving validated data types and spares me the need to parse them from stringed text every time. However, you must also be careful in checking the return types of these API promises. I've encountered errors several times because I think that the groq api correctly returns a JSON object. 
+For text generation groq also uses a JSON_MODE `response_format: { type: "json_object" }` in the api parameter call. This is super helpful in only receiving validated data types and spares me the need to parse them from stringed text every time. However, you must also be careful in checking the return types of these API promises. I've encountered errors several times because I think that the groq api correctly returns a JSON object:
 
 ![](images/debug.png)
 
-Instead, the response is wrapped in double quotes `"{}"`, so you must call the `const parsed_response = JSON.parse(response)` to convert it to a parseable JSON Object. I thought that typing the response with the expected type would work, but sometimes it failed and I never really dug deep into that. So just remember to call the .parse() function.
+Instead, the response is wrapped in double quotes `"{}"`, so you must call the `const parsed_response = JSON.parse(response)` to convert it to a parseable JSON Object. I thought that explicitly declaring the type of the promise response would work, but sometimes it failed and I never really dug deep into that. So just remember to call the .parse() function.
 
 I also opted to create a table of contents component where users can click on to jump directly to the content. I used [nextui's listbox component](https://nextui.org/docs/components/listbox)
 
@@ -297,14 +301,16 @@ This app was not the user experience I was expecting. The bottleneck lies in the
 
 ![](images/speed.png)
 
-After some thought, I have learned a fundamental theorem of engineering for use cases:
+After some thought, I discovered a fundamental thought that is good to remember when deciding what you want to build with a certain service:
 
-> The features of an API service, namely its speed, reliability, and accuracy determine the feasible and best experience use cases
+> The features of an API service — namely its speed, reliability, and accuracy — readily determine the feasible and best app use cases
 
-Trying to create an application that doesn't match the technical abilities of its services, or APIs will not yield good user experiences. Here, let me a draw a rough diagram to explain. The following is what I define as a `Use Cases Diagram` ->
+Trying to create an application that doesn't match the technical abilities or advantages of its services, or APIs will not yield good user experiences. Here, let me a draw a rough diagram to explain. For example, I'll never use openai's dalle for chart creation. The following is what I define as a `Use Cases Diagram` ->
 
 ![](images/triangle.png)
 
-This diagram is somewhat inspired by the [CAP Theorem](https://en.wikipedia.org/wiki/CAP_theorem). Most companies who offer AI services (api) exist somewhere here. I've put the companies that I am familiar with or have used before.
+This diagram is somewhat inspired by what is known in distributed systems as the [CAP Theorem](https://en.wikipedia.org/wiki/CAP_theorem). Most companies who offer AI services (api) exist somewhere here. I've put the companies that I am familiar with or have used before.
 
-Oftentimes, you can't have all 3, but I'm not saying the ones in the middle are better. it's just that they probably have an equal balance of all of them. You also start to notice that companies that are positioned on the bottom of the triangle are ones that are very domain specific — eg. video, image, NeRF object, or audio generation — hence, accuracy and reliability are more important factors for speed. Some of the use cases that exist from the capabilities of the `reliable-accurate` services are in `asynchronous` services rather than realtime ones, eg. traffic detection, data collection or labelling, hard generation tasks. Anyways, let me know what you think about this.
+Oftentimes, you can't have all 3, but I'm not saying the ones in the middle are better. it's just that they probably have an equal balance of all of them. You also start to notice that companies that are positioned on the bottom of the triangle are ones that are very domain specific — eg. video, image, NeRF object, or audio generation — hence, accuracy and reliability are more important factors for speed. Therefore, I would not use those tools (at their current speed) for an app that prides itself in speed. Some of the use cases that exist from the capabilities of the `reliable-accurate` services are in `asynchronous` services rather than realtime ones, eg. traffic detection, large scale video classification, data collection or labelling, hard generation tasks. And it seems like twelvelabs are already very aware of this. If they want to have more consumer level apps then they need to make their api faster. Likewise for groq, if they want more specific use cases, then they may need to move down towards accuracy (but groq's different because they just offer fast inferences).
+
+I might continue working on this app, I find it could be a good extension of [summarize.tech](https://www.summarize.tech/). It was fun!
