@@ -1,10 +1,9 @@
 "use client"
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Input, CheckboxGroup, Button, Spacer, Slider } from "@nextui-org/react";
 import { CustomCheckbox } from "./CustomCheckbox.jsx";
 import { Textarea } from "@nextui-org/input";
 import { TwelveLabs, Task } from 'twelvelabs-js';
-import Clip from './clip';
 import { TabPressed, TabUnpressed } from './tabs';
 import { Gist, Summary } from './../../pages/api/twelvelabs.js';
 import { SeoAndTableOfContents } from '../../pages/api/groq';
@@ -17,6 +16,7 @@ import {
     TwelveLabsGistResponse,
     TwelveLabsSummaryResponse
 } from './api-calls'
+import YouTubeInputWithThumbnail from './YoutubeInput';
 
 const videoTypes = [
     "Informational",
@@ -87,23 +87,19 @@ const LeftComponent: React.FC<LeftComponentProps> = ({ setFormSubmitted, setGist
         setRequirements(`Here are additional info for the content generation: ${additionalInfo} Here are some goals: ${goalSelected.join(',')} Here are some info about the video: ${groupSelected.join(',')}`);
     }, [additionalInfo, goalSelected, groupSelected]);
 
-    const handleKeyDown = (e: React.KeyboardEvent<any>, field: string) => {
+    const handleKeyDown = useCallback((e: React.KeyboardEvent<any>, field: string) => {
         if (e.key !== 'Tab') return
         e.preventDefault();
 
         if (field === "videoUrl") { setVideoUrl(yc_video) }
         if (field === "additionalInfo") { setIsTabPressed(true); setAdditionalInfo("e.g. make sure to include the keywords plants, nature, health"); }
-    };
+    }, []);
 
     const handleKeyUp = (e: React.KeyboardEvent<any>) => {
         if (e.key !== 'Tab') return;
         setIsTabPressed(false);
     };
 
-    const isValidYouTubeUrl = (url: string) => {
-        const youtubeRegex = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/.+$/;
-        return youtubeRegex.test(url);
-    };
 
     const handleGenerateClick = async () => {
         setFormSubmitted(true);
@@ -138,155 +134,158 @@ const LeftComponent: React.FC<LeftComponentProps> = ({ setFormSubmitted, setGist
         }
     };
 
+    const isValidYouTubeUrl = useCallback((url: string) => {
+        const regExp = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/.+$/;
+        return regExp.test(url);
+    }, []);
+
+    const handleVideoUrlChange = useCallback((newUrl: string) => {
+        setVideoUrl(newUrl);
+      }, []);
+
+
     return (
-        <div className='bg-gray-50 px-24 pt-24 min-w-[330px]'>
-            <h1 className="text-2xl font-serif ">Generate Page</h1>
-            <Spacer y={1} />
-            <p className="font-osm-font text-xs leading-normal text-gray-700">
-                This app allows you to automatically generate SEO-optimized content via Youtube video upload and the
-                <span className="inline-flex align-top">
-                    <span className="mx-1.5 align-baseline">{logo}</span>
-                    <a href="https://playground.twelvelabs.io/" target="_blank" className="underline mr-1">
-                        Twelve Labs Pegasus-1 (80B)
-                    </a>
-                </span>
-                video-to-text model.
-            </p>
+        <div className="h-full overflow-y-auto px-6 py-6">
+            <div className='bg-gray-50 px-24 pt-24 min-w-[330px]'>
+                <h1 className="text-2xl font-serif ">Generate Page</h1>
+                <Spacer y={1} />
+                <p className="font-osm-font text-xs leading-normal text-gray-700">
+                    This app allows you to automatically generate SEO-optimized content via Youtube video upload and the
+                    <span className="inline-flex align-top">
+                        <span className="mx-1.5 align-baseline">{logo}</span>
+                        <a href="https://playground.twelvelabs.io/" target="_blank" className="underline mr-1">
+                            Twelve Labs Pegasus-1 (80B)
+                        </a>
+                    </span>
+                    video-to-text model.
+                </p>
 
-            <Spacer y={8} />
-            <div>
-                <Input
-                    startContent={<Clip />}
-                    isRequired
-                    radius='sm'
-                    key={"outside"}
-                    labelPlacement={"outside"}
-                    label={"Youtube Link"}
-                    placeholder={yc_video}
-                    variant="bordered"
-                    value={videoUrl ? videoUrl : ""}
-                    pattern="^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/.+$"
-                    isInvalid={!isValidYouTubeUrl(videoUrl)}
-                    className="max-w-full rounded-sm"
-                    onChange={(e) => setVideoUrl(e.target.value)}
-                    onKeyDown={(e) => handleKeyDown(e, "videoUrl")}
-                />
-                <div className="min-h-[25px] leading-tight">
-                    {!isValidYouTubeUrl(videoUrl) ? (
-                        <span className="text-red-500 text-xs ml-1 mt-0">Please enter a valid YouTube URL</span>
-                    ) : (
-                        videoUrl !== 'https://www.youtube.com/watch?v=Nsx5RDVKZSk' && (
-                            <span className="text-yellow-500 ml-1 text-xs leading-tight">
-                                Indexing new videos take a while. I recommend you use my <a href="#" onClick={() => setVideoUrl('https://www.youtube.com/watch?v=Nsx5RDVKZSk')} className="text-blue-500 underline">pre-indexed</a> video
-                            </span>
-                        )
-                    )}
+                <Spacer y={8} />
+                <div>
+                    <YouTubeInputWithThumbnail
+                        initialVideoUrl={videoUrl}
+                        onVideoUrlChange={handleVideoUrlChange}
+                        isValidYouTubeUrl={isValidYouTubeUrl}
+                        handleKeyDown={handleKeyDown}
+                        yc_video={yc_video}
+                    />
+                    <div className="min-h-[25px] leading-tight">
+                        {!isValidYouTubeUrl(videoUrl) ? (
+                            <span className="text-red-500 text-xs ml-1 mt-0">Please enter a valid YouTube URL</span>
+                        ) : (
+                            videoUrl !== 'https://www.youtube.com/watch?v=Nsx5RDVKZSk' && (
+                                <span className="text-yellow-500 text-xs leading-tight">
+                                    Indexing new videos are slow. I recommend you use my <a href="#" onClick={() => setVideoUrl('https://www.youtube.com/watch?v=Nsx5RDVKZSk')} className="text-blue-500 underline">pre-indexed</a> video
+                                </span>
+                            )
+                        )}
+                    </div>
                 </div>
-            </div>
-            <Spacer y={4} />
+                <Spacer y={4} />
 
 
-            <div className="flex flex-col w-full">
-                <CheckboxGroup
-                    className="gap-1"
-                    label={<><span>What are your goals?</span><span className="text-red-500 ml-0.5 text-md">*</span></>}
-                    orientation="horizontal"
-                    value={goalSelected}
-                    onChange={setGoalSelected}
-                    classNames={{
-                        label: 'text-black font-osm-font font-sans text-[14px]'
-                    }}
-                >
-                    {goals.map((goal) => (
-                        <CustomCheckbox key={goal} value={goal.toLowerCase().replace(/\s/g, '')}>
-                            {goal}
-                        </CustomCheckbox>
-                    ))}
-                </CheckboxGroup>
-
-
-                <Spacer y={9} />
-                <CheckboxGroup
-                    className="gap-1 text-osm-black "
-                    label={<><span>Tell us more about your video</span><span className="text-red-500 ml-0.5 text-md">*</span></>}
-                    orientation="horizontal"
-                    value={groupSelected}
-                    onChange={setGroupSelected}
-                    classNames={{
-                        label: 'text-black font-osm-font font-sans text-[14px]'
-                    }}
-                >
-                    {videoTypes.map((type) => (
-                        <CustomCheckbox key={type} value={type.toLowerCase().replace(/\s/g, '')}>
-                            {type}
-                        </CustomCheckbox>
-                    ))}
-                </CheckboxGroup>
-
-            </div>
-
-            <Spacer y={10} />
-            <Slider
-                size="sm"
-                step={1}
-                className="gap-1 text-osm-black max-w-md"
-                color="primary"
-                label={<><span>How many sections?</span></>}
-                showSteps={true}
-                maxValue={8}
-                minValue={1}
-                defaultValue={sectionCount}
-                onChange={(value: number | number[]) => setSectionCount(value as number)}
-            />
-
-            <Spacer y={10} />
-            <div>
-                <Textarea
-                    label={
-                        <div className="flex items-end space-x-1">
-                            <span>Anything else?</span>
-                            {isTabPressed ? (
-                                <div className="align-bottom"><TabPressed /></div>
-                            ) : (
-                                <div className="align-bottom"><TabUnpressed /></div>
-                            )}
-                        </div>
-                    }
-                    placeholder="e.g. make sure to include the keywords plants, nature, health"
-                    variant="bordered"
-                    radius='sm'
-                    labelPlacement="outside"
-                    classNames={{
-                        input: "min-h-[200px] min-w-[300px] max-w-xl"
-                    }}
-                    size='md'
-                    onChange={(e) => setAdditionalInfo(e.target.value)}
-                    value={additionalInfo}
-                    onKeyDown={(e) => handleKeyDown(e, "additionalInfo")}
-                    onKeyUp={handleKeyUp}
-                />
-            </div>
-
-            <Spacer y={6} />
-            <div className='flex justify-end'>
-                <div className="flex justify-end mb-10">
-                    <Button
-                        color='primary'
-                        variant='shadow'
-                        className="rounded-md hover:scale-105 text-gray-600 font-medium"
-                        endContent={
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18px" height="18px" viewBox="0 0 24 24" fill="none">
-                                <path d="M12 8.25L15.75 12M15.75 12L12 15.75M15.75 12H8.25M21.75 12C21.75 17.3848 17.3848 21.75 12 21.75C6.61522 21.75 2.25 17.3848 2.25 12C2.25 6.61522 6.61522 2.25 12 2.25C17.3848 2.25 21.75 6.61522 21.75 12Z" stroke="#4b5563" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                            </svg>
-                        }
-                        onClick={handleGenerateClick}
-                        isDisabled={!formFilled || disableButton}
+                <div className="flex flex-col w-full">
+                    <CheckboxGroup
+                        className="gap-1"
+                        label={<><span>What are your goals?</span><span className="text-red-500 ml-0.5 text-md">*</span></>}
+                        orientation="horizontal"
+                        value={goalSelected}
+                        onChange={setGoalSelected}
+                        classNames={{
+                            label: 'text-black font-osm-font font-sans text-[14px]'
+                        }}
                     >
-                        Generate
-                    </Button>
+                        {goals.map((goal) => (
+                            <CustomCheckbox key={goal} value={goal.toLowerCase().replace(/\s/g, '')}>
+                                {goal}
+                            </CustomCheckbox>
+                        ))}
+                    </CheckboxGroup>
+
+
+                    <Spacer y={9} />
+                    <CheckboxGroup
+                        className="gap-1 text-osm-black "
+                        label={<><span>Tell us more about your video</span><span className="text-red-500 ml-0.5 text-md">*</span></>}
+                        orientation="horizontal"
+                        value={groupSelected}
+                        onChange={setGroupSelected}
+                        classNames={{
+                            label: 'text-black font-osm-font font-sans text-[14px]'
+                        }}
+                    >
+                        {videoTypes.map((type) => (
+                            <CustomCheckbox key={type} value={type.toLowerCase().replace(/\s/g, '')}>
+                                {type}
+                            </CustomCheckbox>
+                        ))}
+                    </CheckboxGroup>
+
                 </div>
-            </div>
-        </div >
+
+                <Spacer y={10} />
+                <Slider
+                    size="sm"
+                    step={1}
+                    className="gap-1 text-osm-black max-w-md"
+                    color="primary"
+                    label={<><span>How many sections?</span></>}
+                    showSteps={true}
+                    maxValue={8}
+                    minValue={1}
+                    defaultValue={sectionCount}
+                    onChange={(value: number | number[]) => setSectionCount(value as number)}
+                />
+
+                <Spacer y={10} />
+                <div>
+                    <Textarea
+                        label={
+                            <div className="flex items-end space-x-1">
+                                <span>Anything else?</span>
+                                {isTabPressed ? (
+                                    <div className="align-bottom"><TabPressed /></div>
+                                ) : (
+                                    <div className="align-bottom"><TabUnpressed /></div>
+                                )}
+                            </div>
+                        }
+                        placeholder="e.g. make sure to include the keywords plants, nature, health"
+                        variant="bordered"
+                        radius='sm'
+                        labelPlacement="outside"
+                        classNames={{
+                            input: "min-h-[200px] min-w-[300px] max-w-xl"
+                        }}
+                        size='md'
+                        onChange={(e) => setAdditionalInfo(e.target.value)}
+                        value={additionalInfo}
+                        onKeyDown={(e) => handleKeyDown(e, "additionalInfo")}
+                        onKeyUp={handleKeyUp}
+                    />
+                </div>
+
+                <Spacer y={6} />
+                <div className='flex justify-end'>
+                    <div className="flex justify-end mb-10">
+                        <Button
+                            color='primary'
+                            variant='shadow'
+                            className="rounded-md hover:scale-105 text-gray-600 font-medium"
+                            endContent={
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18px" height="18px" viewBox="0 0 24 24" fill="none">
+                                    <path d="M12 8.25L15.75 12M15.75 12L12 15.75M15.75 12H8.25M21.75 12C21.75 17.3848 17.3848 21.75 12 21.75C6.61522 21.75 2.25 17.3848 2.25 12C2.25 6.61522 6.61522 2.25 12 2.25C17.3848 2.25 21.75 6.61522 21.75 12Z" stroke="#4b5563" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                </svg>
+                            }
+                            onClick={handleGenerateClick}
+                            isDisabled={!formFilled || disableButton}
+                        >
+                            Generate
+                        </Button>
+                    </div>
+                </div>
+            </div >
+        </div>
     );
 };
 

@@ -1,9 +1,11 @@
+### Website Link: [pages-nu-mauve.vercel.app](https://pages-nu-mauve.vercel.app)
 ![](images/banner.png)
+
 # What I will be building:
 A platform that takes video as an input and produces bite-sized blogs for [SEO](https://en.wikipedia.org/wiki/Search_engine_optimization) optimization.
 
 The app currently:
-- Accepts a mock YouTube video input, and allows users to tune generation
+- Accepts a mock YouTube video input (A YC Video), and allows users to tune generation
 - Generates a banner, title, text content, and table of contents via `/twelvelabs` and `/groq` apis
 - Allows users to edit portions of text via custom prompting
 

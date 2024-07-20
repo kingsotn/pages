@@ -4,7 +4,7 @@ import { tv } from "tailwind-variants";
 
 const checkbox = tv({
   slots: {
-    base: "border-1 cursor-pointer transition-colors rounded-md hover:scale-[104%] ",
+    base: "border-1 cursor-pointer transition-colors rounded-md hover:scale-[104%]",
     content: "text-current transition-colors rounded-md font-[450]"
   },
   variants: {
