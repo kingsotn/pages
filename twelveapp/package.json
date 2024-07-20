@@ -11,6 +11,7 @@
   "dependencies": {
     "@nextui-org/avatar": "^0.0.0-canary-20240616172522",
     "@nextui-org/react": "^2.4.2",
+    "@vercel/analytics": "^1.3.1",
     "framer-motion": "^11.3.2",
     "fs": "^0.0.1-security",
     "groq-sdk": "^0.5.0",

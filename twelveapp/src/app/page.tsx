@@ -5,6 +5,7 @@ import LeftComponent from "./left";
 import RightComponent from "./right";
 import { Gist, Summary } from '../../pages/api/twelvelabs';
 import { SeoAndTableOfContents } from '../../pages/api/groq';
+import { Analytics } from "@vercel/analytics/react"
 
 export default function Home() {
   const [formSubmitted, setFormSubmitted] = useState(false);
@@ -33,17 +34,20 @@ export default function Home() {
   }, [gist])
 
   return (
-    <NextUIProvider>
-      <main className="min-h-screen flex flex-col md:flex-row">
-        <div className="w-full md:w-[670px] min-w-[670px] flex-shrink-0 flex flex-col border-b-1 md:border-b-0 md:border-r-1 border-gray-300 bg-gray-50 md:fixed md:left-0 md:top-0 md:bottom-0">
-          <LeftComponent setFormSubmitted={setFormSubmitted} setGist={setGist} setSummary={setSummary} setSeoAndTableOfContents={setSeoAndTableOfContents} videoUrl={videoUrl} setVideoUrl={setVideoUrl} setSectionCount={setSectionCount} sectionCount={sectionCount} requirements={requirements} setRequirements={setRequirements}/>
-        </div>
-        <div className="w-full md:w-[calc(100%-670px)] md:ml-[670px] overflow-y-auto overflow-x-hidden">
-          <div className="min-w-[670px] md:min-w-0">
-            <RightComponent formSubmitted={formSubmitted} gist={gist} summary={summary} seoAndTableOfContents={seoAndTableOfContents} videoUrl={videoUrl} sectionCount={sectionCount} />
+    <>
+      <NextUIProvider>
+        <main className="min-h-screen flex flex-col md:flex-row">
+          <div className="w-full md:w-[670px] min-w-[670px] flex-shrink-0 flex flex-col border-b-1 md:border-b-0 md:border-r-1 border-gray-300 bg-gray-50 md:fixed md:left-0 md:top-0 md:bottom-0">
+            <LeftComponent setFormSubmitted={setFormSubmitted} setGist={setGist} setSummary={setSummary} setSeoAndTableOfContents={setSeoAndTableOfContents} videoUrl={videoUrl} setVideoUrl={setVideoUrl} setSectionCount={setSectionCount} sectionCount={sectionCount} requirements={requirements} setRequirements={setRequirements} />
           </div>
-        </div>
-      </main>
-    </NextUIProvider>
+          <div className="w-full md:w-[calc(100%-670px)] md:ml-[670px] overflow-y-auto overflow-x-hidden">
+            <div className="min-w-[670px] md:min-w-0">
+              <RightComponent formSubmitted={formSubmitted} gist={gist} summary={summary} seoAndTableOfContents={seoAndTableOfContents} videoUrl={videoUrl} sectionCount={sectionCount} />
+            </div>
+          </div>
+        </main>
+      </NextUIProvider>
+      <Analytics />
+    </>
   );
 }
