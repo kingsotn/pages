@@ -1,5 +1,5 @@
 "use client"
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Input, CheckboxGroup, Button, Spacer, Slider } from "@nextui-org/react";
 import { CustomCheckbox } from "./CustomCheckbox.jsx";
 import { Textarea } from "@nextui-org/input";
@@ -87,13 +87,13 @@ const LeftComponent: React.FC<LeftComponentProps> = ({ setFormSubmitted, setGist
         setRequirements(`Here are additional info for the content generation: ${additionalInfo} Here are some goals: ${goalSelected.join(',')} Here are some info about the video: ${groupSelected.join(',')}`);
     }, [additionalInfo, goalSelected, groupSelected]);
 
-    const handleKeyDown = (e: React.KeyboardEvent<any>, field: string) => {
+    const handleKeyDown = useCallback((e: React.KeyboardEvent<any>, field: string) => {
         if (e.key !== 'Tab') return
         e.preventDefault();
 
         if (field === "videoUrl") { setVideoUrl(yc_video) }
         if (field === "additionalInfo") { setIsTabPressed(true); setAdditionalInfo("e.g. make sure to include the keywords plants, nature, health"); }
-    };
+    }, []);
 
     const handleKeyUp = (e: React.KeyboardEvent<any>) => {
         if (e.key !== 'Tab') return;
@@ -134,10 +134,14 @@ const LeftComponent: React.FC<LeftComponentProps> = ({ setFormSubmitted, setGist
         }
     };
 
-    const isValidYouTubeUrl = (url: string) => {
-        const youtubeRegex = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/.+$/;
-        return youtubeRegex.test(url);
-    };
+    const isValidYouTubeUrl = useCallback((url: string) => {
+        const regExp = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/.+$/;
+        return regExp.test(url);
+    }, []);
+
+    const handleVideoUrlChange = useCallback((newUrl: string) => {
+        setVideoUrl(newUrl);
+      }, []);
 
 
     return (
@@ -158,14 +162,20 @@ const LeftComponent: React.FC<LeftComponentProps> = ({ setFormSubmitted, setGist
 
                 <Spacer y={8} />
                 <div>
-                    <YouTubeInputWithThumbnail isValidYouTubeUrl={isValidYouTubeUrl} videoUrl={videoUrl} setVideoUrl={setVideoUrl} handleKeyDown={handleKeyDown} yc_video={yc_video} />
+                    <YouTubeInputWithThumbnail
+                        initialVideoUrl={videoUrl}
+                        onVideoUrlChange={handleVideoUrlChange}
+                        isValidYouTubeUrl={isValidYouTubeUrl}
+                        handleKeyDown={handleKeyDown}
+                        yc_video={yc_video}
+                    />
                     <div className="min-h-[25px] leading-tight">
                         {!isValidYouTubeUrl(videoUrl) ? (
                             <span className="text-red-500 text-xs ml-1 mt-0">Please enter a valid YouTube URL</span>
                         ) : (
                             videoUrl !== 'https://www.youtube.com/watch?v=Nsx5RDVKZSk' && (
-                                <span className="text-yellow-500 ml-1 text-xs leading-tight">
-                                    Indexing new videos take a while. I recommend you use my <a href="#" onClick={() => setVideoUrl('https://www.youtube.com/watch?v=Nsx5RDVKZSk')} className="text-blue-500 underline">pre-indexed</a> video
+                                <span className="text-yellow-500 text-xs leading-tight">
+                                    Indexing new videos are slow. I recommend you use my <a href="#" onClick={() => setVideoUrl('https://www.youtube.com/watch?v=Nsx5RDVKZSk')} className="text-blue-500 underline">pre-indexed</a> video
                                 </span>
                             )
                         )}
