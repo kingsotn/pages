@@ -74,7 +74,7 @@ const YouTubeInput: React.FC<YouTubeInputProps> = React.memo(({
             setIsTooltipOpen(true);
             setTimeout(() => {
                 setIsTooltipOpen(false);
-            }, 2000);
+            }, 3000);
         }
         handleKeyDown(e, "videoUrl");
     }, [handleKeyDown]);
@@ -86,7 +86,7 @@ const YouTubeInput: React.FC<YouTubeInputProps> = React.memo(({
     }, [onVideoUrlChange]);
 
     const tooltipContent = useMemo(() => (
-        <div className="p-2 rounded-lg shadow-lg bg-white border border-gray-200">
+        <div className="p-2 bg-white">
             {videoInfo ? (
                 <div className="relative">
                     <img
