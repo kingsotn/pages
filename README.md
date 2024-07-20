@@ -123,9 +123,7 @@ Here were things that bothered me and so I changed:
 
 ![](images/left-final.png)
 
-Now that I have my frontend done, I was ready to work on the backend API calls. My goals for the backend was to [KISS](https://en.wikipedia.org/wiki/KISS_principle) — I avoided touching cloud, middlewares, or mocking software. Here is the `/gist` endpoint for the twelvelabs API I used for the title component.
-
-![](images/api.png)
+Now that I have my frontend done, I was ready to work on the backend API calls. My goals for the backend was to [KISS](https://en.wikipedia.org/wiki/KISS_principle) — I avoided touching cloud, middlewares, or mocking software. 
 
 ### Backend Flow (Draft #1)
 ```mermaid
@@ -148,6 +146,10 @@ graph LR
     style G fill:#9C27B0,stroke:#333,stroke-width:2px,color:white
     style H fill:#E91E63,stroke:#333,stroke-width:2px,color:white
 ```
+
+Here is the `/gist` endpoint for the twelvelabs API I used for the title component.
+
+![](images/api.png)
 
 And as I started playing around with the YouTube file uploads, there was a bug with the endpoint where I ended up with 7 replicas of the same video for one index upload call.
 
@@ -311,6 +313,6 @@ Trying to create an application that doesn't match the technical abilities or ad
 
 This diagram is somewhat inspired by what is known in distributed systems as the [CAP Theorem](https://en.wikipedia.org/wiki/CAP_theorem). Most companies who offer AI services (api) exist somewhere here. I've put the companies that I am familiar with or have used before.
 
-Oftentimes, you can't have all 3, but I'm not saying the ones in the middle are better. it's just that they probably have an equal balance of all of them. You also start to notice that companies that are positioned on the bottom of the triangle are ones that are very domain specific — eg. video, image, NeRF object, or audio generation — hence, accuracy and reliability are more important factors for speed. Therefore, I would not use those tools (at their current speed) for an app that prides itself in speed. Some of the use cases that exist from the capabilities of the `reliable-accurate` services are in `asynchronous` services rather than realtime ones, eg. traffic detection, large scale video classification, data collection or labelling, hard generation tasks. And it seems like twelvelabs are already very aware of this. If they want to have more consumer level apps then they need to make their api faster. Likewise for groq, if they want more specific use cases, then they may need to move down towards accuracy (but groq's different because they just offer fast inferences).
+Oftentimes, you can't have all 3, but I'm not saying the ones in the middle are better. it's just that they probably have an equal balance of all of them. You also start to notice that companies that are positioned on the bottom of the triangle are ones that are very domain specific — eg. video (Luma, runway), image (Dalle, midjourney, Krea), NeRF object (Luma Labs), or audio generation (ElevenLabs)— hence, accuracy and reliability are more important factors than speed. Therefore, I would not use those api services (at their current speed at least) for an app where speed is important. Some of the use cases that exist from the capabilities of the `reliable-accurate` services are in `asynchronous` services rather than realtime ones, eg. traffic detection, large scale video classification, data collection or labelling, hard generation tasks. And it seems like twelvelabs are already very aware of this. If they want to have more consumer level apps then they need to make their api faster. Likewise for groq, if they want more specific use cases, then they may need to move down towards accuracy (but groq's different because their core service is an inference engine wrapper).
 
-I might continue working on this app, I find it could be a good extension of [summarize.tech](https://www.summarize.tech/). It was fun!
+I might continue working on this app. I find it could be a good extension of [summarize.tech](https://www.summarize.tech/).
