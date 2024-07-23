@@ -29,7 +29,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file. Create and include your api keys in a `.env.local` file
 
-```bash
+```toml
 # .env.local
 TWELVE_KEY=<TWELVE_KEY>
 GROQ_API_KEY=<GROQ_KEY>
