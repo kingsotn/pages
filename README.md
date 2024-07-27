@@ -134,6 +134,12 @@ Here were things that bothered me and so I changed:
 - let’s add some shadows between components for a bit more contrast
 - serif fonts for titles to build contrast
 
+Here's an example of what cumulative shift looks like:
+
+![](images/cumulative_shift.gif)
+
+And here are the final UI changes that I made:
+
 ![](images/left-final.png)
 
 Now that I have my frontend done, I was ready to work on the backend API calls. My goals for the backend was to [KISS](https://en.wikipedia.org/wiki/KISS_principle) — I avoided touching cloud, middlewares, or mocking software. 
