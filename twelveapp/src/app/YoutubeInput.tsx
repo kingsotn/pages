@@ -40,6 +40,7 @@ const YouTubeInput: React.FC<YouTubeInputProps> = React.memo(({
 
     const fetchVideoInfo = useCallback(async (videoId: string) => {
         try {
+            // youtube info
             const response = await fetch(`/api/youtube-info?videoId=${videoId}`);
             if (response.ok) {
                 const data = await response.json();
@@ -57,16 +58,36 @@ const YouTubeInput: React.FC<YouTubeInputProps> = React.memo(({
         }
     }, []);
 
+    const [transcript, setTranscript] = useState([]);
+
+    const fetchTranscript = useCallback(async (videoId: string) => {
+        setTranscript([]);
+
+        try {
+            const response = await fetch(`/api/youtube-transcript?videoId=${videoId}`);
+            const data = await response.json();
+
+            if (response.ok) {
+                setTranscript(data.transcript);
+            } else {
+                console.log('Failed to fetch transcript');
+            }
+        } catch (error) {
+            console.error('Error fetching video info:', error);
+        }
+    }, []);
+
     useEffect(() => {
         if (videoUrl && isValidYouTubeUrl(videoUrl)) {
             const videoId = getYouTubeVideoId(videoUrl);
             if (videoId) {
                 fetchVideoInfo(videoId);
+                fetchTranscript(videoId);
             }
         } else {
             setVideoInfo(null);
         }
-    }, [videoUrl, isValidYouTubeUrl, getYouTubeVideoId, fetchVideoInfo]);
+    }, [videoUrl, isValidYouTubeUrl, getYouTubeVideoId, fetchVideoInfo, fetchTranscript]);
 
     const handleInputKeyDown = useCallback((e: React.KeyboardEvent<any>) => {
         if (e.key === 'Tab') {

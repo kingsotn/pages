@@ -18,6 +18,7 @@ import {
 } from './api-calls'
 import YouTubeInputWithThumbnail from './YoutubeInput';
 
+
 const videoTypes = [
     "Informational",
     "Entertainment",
@@ -141,7 +142,7 @@ const LeftComponent: React.FC<LeftComponentProps> = ({ setFormSubmitted, setGist
 
     const handleVideoUrlChange = useCallback((newUrl: string) => {
         setVideoUrl(newUrl);
-      }, []);
+    }, []);
 
 
     return (
